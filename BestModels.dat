@@ -3,23 +3,7 @@ BEST MODELS - SN-TPS Neural Networks
 Last Updated: November 16, 2025
 ================================
 
-1. MAIN TRACK IDENTIFIER (MT)
-------------------------------
-Best Model: v10_corrected_50k
-Architecture: Simple CNN (single plane X)
-Performance: 91.4% accuracy
-Training: 50k balanced samples (ES+CC)
-Location: /eos/user/e/evilla/dune/sn-tps/neural_networks/mt_identifier/v10_corrected_50k/
-Notes: Trained with corrected data structure, balanced classes
-
-Latest: v21_50k (Nov 16, 2025)
-Performance: 91.0% accuracy
-Training: 50k balanced samples with history persistence
-Location: /eos/user/e/evilla/dune/sn-tps/neural_networks/mt_identifier/v21_50k/
-Notes: Includes training history saving feature, similar performance to v10
-
-
-2. ELECTRON DIRECTION (ED)
+1. ELECTRON DIRECTION (ED)
 ---------------------------
 Best Model: v26_50k_corrected
 Architecture: Three-plane CNN (U/V/X matched)
@@ -37,7 +21,7 @@ Status: WORSE than expected - needs hyperopt (v14 with hyperopt achieved 25° @ 
 Current: v52 (running with hyperopt) - attempting to match v14 performance
 
 
-3. CHANNEL TAGGING (CT)
+2. CHANNEL TAGGING (CT)
 ------------------------
 Best Model: v42_corrected_100k
 Architecture: Single-plane volume CNN (X plane)
@@ -57,8 +41,6 @@ Job: 12913042 (running)
 ================================
 SUMMARY OF CURRENT SITUATION
 ================================
-
-MT: STABLE - v10/v21 both ~91% accuracy, production ready
 
 ED: NEEDS IMPROVEMENT
   - v50 (100k, no hyperopt): 49.9° mean - WORSE than v14

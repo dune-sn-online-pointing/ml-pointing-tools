@@ -46,7 +46,7 @@ def load_ct_data(data_dir, plane='X', max_samples=500, seed=42):
 
 def main():
     # Load model
-    model_dir = Path('/afs/cern.ch/work/e/evilla/private/dune/refactor_ml/training_output/channel_tagging/ct_volume_v72_deeper_100k_20251119_161206')
+    model_dir = Path('/afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/training_output/channel_tagging/ct_volume_v72_deeper_100k_20251119_161206')
     model_path = model_dir / 'best_model.keras'
     
     print(f"Loading model: {model_path}")

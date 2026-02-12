@@ -37,7 +37,7 @@ Training electron direction (ED) model using full 1m×1m volume clusters instead
 ## Implementation Files
 
 ### Data Loader
-**File**: `/afs/cern.ch/work/e/evilla/private/dune/refactor_ml/python/volume_ed_data_loader.py`
+**File**: `/afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/python/volume_ed_data_loader.py`
 
 **Key Features**:
 - Loads three-plane matched volumes from U/V/X subdirectories
@@ -50,7 +50,7 @@ Training electron direction (ED) model using full 1m×1m volume clusters instead
 - Returns: (images_u, images_v, images_x, directions, energies, metadata)
 
 ### Training Script
-**File**: `/afs/cern.ch/work/e/evilla/private/dune/refactor_ml/electron_direction/models/train_volumes.py`
+**File**: `/afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/models/train_volumes.py`
 
 **Architecture Function**: `build_three_plane_volume_cnn(input_shape=(208, 1242, 1))`
 - Three parallel CNN branches (U, V, X)
@@ -142,7 +142,7 @@ After job completes, check:
 
 ## Files Summary
 ```
-refactor_ml/
+ml-pointing-tools/
 ├── python/
 │   └── volume_ed_data_loader.py          # Custom ED volume data loader
 ├── electron_direction/
@@ -163,5 +163,5 @@ refactor_ml/
 
 ## Contact / Issues
 - Data location: `/eos/user/e/evilla/dune/sn-tps/prod_es/es_production_volume_images_tick3_ch2_min2_tot3_e2p0/`
-- Job logs: `/afs/cern.ch/work/e/evilla/private/dune/refactor_ml/electron_direction/condor/logs/`
+- Job logs: `/afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/condor/logs/`
 - Check job: `condor_q 13789427` or `condor_history 13789427`

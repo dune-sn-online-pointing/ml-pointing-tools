@@ -25,6 +25,6 @@
     "learning_rate": 0.001
   },
   "output": {
-    "output_folder": "/afs/cern.ch/work/e/evilla/private/dune/refactor_ml/electron_direction/output/volumes_v01"
+    "output_folder": "/afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/output/volumes_v01"
   }
 }

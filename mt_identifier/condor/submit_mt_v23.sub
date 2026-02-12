@@ -1,9 +1,0 @@
-executable            = wrapper_mt_v23.sh
-arguments             = -j /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/mt_identifier/json/v23_200k_metadata.json
-output                = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/mt_identifier/logs/mt_v23.$(ClusterId).$(ProcId).out
-error                 = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/mt_identifier/logs/mt_v23.$(ClusterId).$(ProcId).err
-log                   = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/mt_identifier/logs/mt_v23.$(ClusterId).log
-request_GPUs          = 1
-request_memory        = 100GB
-+JobFlavour           = "tomorrow"
-queue 1

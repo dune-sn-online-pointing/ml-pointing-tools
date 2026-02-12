@@ -36,7 +36,7 @@ echo "JSON config: $JSON_FILE"
 source /cvmfs/sft.cern.ch/lcg/views/LCG_105/x86_64-el9-gcc13-opt/setup.sh
 
 # Run training
-cd /afs/cern.ch/work/e/evilla/private/dune/refactor_ml
+cd /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools
 python3 channel_tagging/models/train_ct_volume_incremental.py --json "$JSON_FILE"
 
 EXIT_CODE=$?

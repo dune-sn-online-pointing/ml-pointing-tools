@@ -1,7 +1,7 @@
 executable = condor/run_test_ct_v72_deeper.sh
-output = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/training_output/channel_tagging/ct_volume_v72_deeper_100k_20251119_161206/test_job.out
-error = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/training_output/channel_tagging/ct_volume_v72_deeper_100k_20251119_161206/test_job.err
-log = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/training_output/channel_tagging/ct_volume_v72_deeper_100k_20251119_161206/test_job.log
+output = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/training_output/channel_tagging/ct_volume_v72_deeper_100k_20251119_161206/test_job.out
+error = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/training_output/channel_tagging/ct_volume_v72_deeper_100k_20251119_161206/test_job.err
+log = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/training_output/channel_tagging/ct_volume_v72_deeper_100k_20251119_161206/test_job.log
 
 request_cpus = 2
 request_memory = 60GB

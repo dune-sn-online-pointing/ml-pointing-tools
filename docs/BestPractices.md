@@ -1,6 +1,6 @@
 Remember:
 - Instead of directing unwanted output to /dev/null, use the proper flags for the different commands to silence output
-- for each task having their subfolder (electron_direction, mt_identifier and channel_tagging) follow the structure to  place sub scripts under condor/, logs are supposed to be under logs/, analysis tools under ana/.
+- for each task having their subfolder (electron_direction and channel_tagging) follow the structure to place sub scripts under condor/, logs are supposed to be under logs/, analysis tools under ana/.
 - ask for a GPU when submitting trainings
 - output of trainings shall go in /eos/user/e/evilla/dune/sn-tps/neural_networks/ in the appropriate subfolder.
 - networks should be saved at every epoch during training to avoid losing progress in case of job failure.
@@ -10,6 +10,6 @@ Remember:
 - update Networks.md with info about new models, no need to add if it's running or what.
 - source in the current shell source scripts/init.sh to load python env
 - don't put machine OS requirement in submit scripts
-- when starting from a working configuration or settings file, make a copy and moidyf the copy instead of starting from scratch, it's safer.
+- when starting from a working configuration or settings file, make a copy and modify the copy instead of starting from scratch, it's safer.
 - no requirements on gpu, any is fine.
 - check wrapper arguments, in particular input_json vs --input_json -j --json etc.

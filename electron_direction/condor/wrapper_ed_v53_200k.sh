@@ -15,8 +15,8 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Source environment
-source /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/scripts/init.sh
+source /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/scripts/init.sh
 
 # Run training
-cd /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/electron_direction
+cd /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction
 python models/train_three_plane_hyperopt.py --input_json "$JSON_PATH"

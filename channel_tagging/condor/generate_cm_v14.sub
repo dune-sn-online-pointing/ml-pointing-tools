@@ -1,5 +1,5 @@
-executable              = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/channel_tagging/ana/generate_confusion_matrix_from_model.py
-arguments               = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/training_output/channel_tagging/ct_volume_simple/20251113_014639
+executable              = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/ana/generate_confusion_matrix_from_model.py
+arguments               = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/training_output/channel_tagging/ct_volume_simple/20251113_014639
 output                  = channel_tagging/logs/generate_cm_v14_$(ClusterId).out
 error                   = channel_tagging/logs/generate_cm_v14_$(ClusterId).err
 log                     = channel_tagging/logs/generate_cm_v14_$(ClusterId).log

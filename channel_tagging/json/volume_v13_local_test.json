@@ -38,7 +38,7 @@
     "enabled": false
   },
   "output": {
-    "base_dir": "/afs/cern.ch/work/e/evilla/private/dune/refactor_ml/training_output/",
+    "base_dir": "/afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/training_output/",
     "save_best_only": true
   }
 }

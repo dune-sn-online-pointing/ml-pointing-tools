@@ -1,7 +1,7 @@
 # Condor submit file for CT v42 - corrected data 100k
 universe                = vanilla
-executable              = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/channel_tagging/condor/wrapper_ct_simple.sh
-arguments               = -j /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/channel_tagging/json/volume_v42_corrected_100k.json
+executable              = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/condor/wrapper_ct_simple.sh
+arguments               = -j /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/json/volume_v42_corrected_100k.json
 
 # Resource requests
 request_cpus            = 4
@@ -14,15 +14,15 @@ request_disk            = 15GB
 requirements            = (OpSysAndVer =?= "AlmaLinux9")
 
 # Working directory
-initialdir              = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml
+initialdir              = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools
 
 # Environment
 getenv                  = True
 
 # Output files
-log                     = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/channel_tagging/logs/CT_v42_$(Cluster).log
-output                  = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/channel_tagging/logs/CT_v42_$(Cluster).out
-error                   = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/channel_tagging/logs/CT_v42_$(Cluster).err
+log                     = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/logs/CT_v42_$(Cluster).log
+output                  = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/logs/CT_v42_$(Cluster).out
+error                   = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/logs/CT_v42_$(Cluster).err
 
 # Notification
 notification            = Error

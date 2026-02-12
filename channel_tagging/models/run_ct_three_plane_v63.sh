@@ -1,4 +1,8 @@
 #!/bin/bash
-source /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/scripts/init.sh --quiet
-cd /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/channel_tagging/models
-python train_ct_three_plane_batch_reload.py --json ../json/volume_v63_three_plane_batch_reload.json
+set -e
+
+REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+source "$REPO_DIR/scripts/init.sh"
+
+python3 "$REPO_DIR/channel_tagging/models/train_ct_three_plane_batch_reload.py" \
+	--json "$REPO_DIR/channel_tagging/json/volume_v63_three_plane_batch_reload.json"

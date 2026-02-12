@@ -16,7 +16,7 @@ echo "Python version: $(python3 --version)"
 echo ""
 
 # Navigate to working directory
-cd /afs/cern.ch/work/e/evilla/private/dune/refactor_ml
+cd /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools
 
 # Run training
 echo "Starting training..."

@@ -1,5 +1,5 @@
 executable            = wrapper_v53.sh
-arguments             = -j /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/electron_direction/json/v53_200k_hyperopt.json
+arguments             = -j /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/json/v53_200k_hyperopt.json
 output                = output/ed_v53.$(ClusterId).$(ProcId).out
 error                 = error/ed_v53.$(ClusterId).$(ProcId).err
 log                   = log/ed_v53.$(ClusterId).log

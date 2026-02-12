@@ -11,7 +11,7 @@ done
 
 [[ -z "$JSON_FILE" ]] && { echo "Error: JSON config required (-j)"; exit 1; }
 
-PROJECT_DIR="/afs/cern.ch/work/e/evilla/private/dune/refactor_ml"
+PROJECT_DIR="/afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools"
 cd "$PROJECT_DIR"
 source "$PROJECT_DIR/scripts/init.sh"
 

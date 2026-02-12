@@ -35,7 +35,7 @@ echo "  JSON: $JSON_FILE"
 echo "==========================================="
 
 # Run training
-cd /afs/cern.ch/work/e/evilla/private/dune/refactor_ml
+cd /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools
 python electron_direction/models/ed_training.py --input_json "$JSON_FILE"
 
 EXIT_CODE=$?

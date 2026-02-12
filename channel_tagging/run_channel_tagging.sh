@@ -6,8 +6,9 @@
 set -e
 
 # Source initialization
-SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPTS_DIR/init.sh"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+source "$REPO_DIR/scripts/init.sh"
 
 # Default configuration
 INPUT_JSON="$JSON_DIR/channel_tagging/production_training.json"
@@ -53,8 +54,9 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Add Python modules to path
-export PYTHONPATH="$PYTHON_DIR:$PYTHONPATH"
+# Validate inputs
+check_file "$INPUT_JSON"
+ensure_dir "$OUTPUT_FOLDER"
 
 echo "[INFO] Starting Channel Tagging Training"
 echo "[INFO] Configuration: $INPUT_JSON"
@@ -62,5 +64,6 @@ echo "[INFO] Output: $OUTPUT_FOLDER"
 echo "[INFO] Running training script..."
 
 # Run training
-cd "$REPO_DIR/channel_tagging"
-python main.py --input_json "$INPUT_JSON" --output_folder "$OUTPUT_FOLDER"
+python3 "$REPO_DIR/channel_tagging/models/ct_training.py" \
+    --input_json "$INPUT_JSON" \
+    --output_folder "$OUTPUT_FOLDER"

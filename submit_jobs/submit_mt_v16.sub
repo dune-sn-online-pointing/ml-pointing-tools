@@ -1,6 +1,0 @@
-executable = scripts/wrapper_mt_simple.sh
-arguments = -j mt_identifier/json/production_v16_100k.json
-request_memory = 20GB
-request_cpus = 6
-+MaxRuntime = 172800
-queue

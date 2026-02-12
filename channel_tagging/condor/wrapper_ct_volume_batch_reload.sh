@@ -41,7 +41,7 @@ echo "  Reload every: $RELOAD_EPOCHS epochs"
 echo "==========================================="
 
 # Run training
-cd /afs/cern.ch/work/e/evilla/private/dune/refactor_ml
+cd /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools
 python channel_tagging/models/train_ct_volume_batch_reload.py \
     --json "$JSON_FILE" \
     --plane "$PLANE" \

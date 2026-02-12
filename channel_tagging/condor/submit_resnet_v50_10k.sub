@@ -1,11 +1,11 @@
 #!/bin/bash
 # Condor submission script for ResNet-style CT training
 
-executable            = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/channel_tagging/condor/run_ct_resnet.sh
+executable            = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/condor/run_ct_resnet.sh
 arguments             = resnet_v50_10k.json
-output                = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/channel_tagging/logs/resnet_v50_10k_$(ClusterId).out
-error                 = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/channel_tagging/logs/resnet_v50_10k_$(ClusterId).err
-log                   = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/channel_tagging/logs/resnet_v50_10k_$(ClusterId).log
+output                = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/logs/resnet_v50_10k_$(ClusterId).out
+error                 = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/logs/resnet_v50_10k_$(ClusterId).err
+log                   = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/logs/resnet_v50_10k_$(ClusterId).log
 
 # Resource requirements
 request_cpus          = 4

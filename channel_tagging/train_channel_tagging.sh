@@ -1,7 +1,9 @@
 #!/bin/bash
 set -e
-export SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source $SCRIPTS_DIR/init.sh
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+source "$REPO_DIR/scripts/init.sh"
 
 # Parse arguments
 json_file=""
@@ -17,8 +19,15 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+if [[ -z "$json_file" ]]; then
+  echo "Error: JSON config file is required (-j|--json)"
+  exit 1
+fi
+
+check_file "$json_file"
+
 # Build command
-CMD=("python3" "channel_tagging/ct_training.py" "--input_json" "$json_file")
+CMD=("python3" "$REPO_DIR/channel_tagging/models/ct_training.py" "--input_json" "$json_file")
 [[ -n "$plane" ]] && CMD+=("--plane" "$plane")
 [[ -n "$max_samples" ]] && CMD+=("--max_samples" "$max_samples")
 

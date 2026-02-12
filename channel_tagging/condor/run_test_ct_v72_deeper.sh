@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /afs/cern.ch/work/e/evilla/private/dune/refactor_ml
+cd /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools
 
 echo "=========================================="
 echo "Testing CT v72 deeper model"

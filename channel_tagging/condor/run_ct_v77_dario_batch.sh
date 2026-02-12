@@ -27,7 +27,7 @@ echo "=== GPU Info ==="
 nvidia-smi
 
 # Change to the project directory
-cd /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/channel_tagging
+cd /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging
 
 # Run the training
 echo ""

@@ -17,6 +17,6 @@
         "learning_rate": 0.001
     },
     "output": {
-        "base_dir": "/afs/cern.ch/work/e/evilla/private/dune/refactor_ml/channel_tagging/test_outputs/"
+        "base_dir": "/afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/test_outputs/"
     }
 }

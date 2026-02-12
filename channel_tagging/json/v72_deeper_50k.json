@@ -1,6 +1,6 @@
 {
   "model_name": "ct_volume_v72_deeper_50k",
-  "output_folder": "training_output/channel_tagging",
+  "output_folder": "/eos/user/e/evilla/dune/sn-tps/neural_networks/channel_tagging",
   "es_directory": "/eos/home-e/evilla/dune/sn-tps/prod_es/es_production_volume_images_tick3_ch2_min2_tot3_e2p0/X",
   "cc_directory": "/eos/home-e/evilla/dune/sn-tps/prod_cc/cc_production_volume_images_tick3_ch2_min2_tot3_e2p0/X",
   "task_label": "channel_tagging_volume",

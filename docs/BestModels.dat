@@ -1,11 +1,10 @@
 # Best Performing Neural Network Models
 # Updated: November 15, 2025
 
-Task                  | Version  | Performance Metric                | Model Path
---------------------- | -------- | --------------------------------- | ----------------------------------------------------------
-Electron Direction    | v14      | 25° @ 68% quantile               | /eos/user/e/evilla/dune/sn-tps/neural_networks/electron_direction/three_plane_v14_10k_hyperopt_20251111_175141/
-Main Track Identifier | v27      | 90.0% accuracy, 93.4% AUC-ROC    | /eos/user/e/evilla/dune/sn-tps/neural_networks/mt_identifier/v27_200k/mt_fixed_20251117_222505/
-Channel Tagging       | v42      | 67.1% train, 65.3% val accuracy  | /eos/user/e/evilla/dune/sn-tps/neural_networks/channel_tagging/v42_corrected_100k/20251114_213453/
+Task               | Version  | Performance Metric                | Model Path
+------------------ | -------- | --------------------------------- | ----------------------------------------------------------
+Electron Direction | v14      | 25° @ 68% quantile               | /eos/user/e/evilla/dune/sn-tps/neural_networks/electron_direction/three_plane_v14_10k_hyperopt_20251111_175141/
+Channel Tagging    | v42      | 67.1% train, 65.3% val accuracy  | /eos/user/e/evilla/dune/sn-tps/neural_networks/channel_tagging/v42_corrected_100k/20251114_213453/
 
 ## Notes
 
@@ -14,12 +13,6 @@ Channel Tagging       | v42      | 67.1% train, 65.3% val accuracy  | /eos/user/
   - Performance: 25° @ 68% quantile on validation set
   - Status: Satisfactory for current needs
   
-- **MT v27**: Simple CNN architecture, 200k balanced samples (100k ES + 100k CC)
-  - Binary classification: ES vs CC main track identification
-  - Training dataset: nov11 cluster images (128×32 pixels)
-  - Fixed data leakage with file-level 75/15/10 split, early stopping patience 50
-  - Corrected energy metadata (cluster_energy_mev from column 10)
-
 - **CT v42**: 100k balanced samples (50k per class), corrected data
   - 4 conv layers, 64 filters, batch norm
   - 49 epochs trained, stopped at validation plateau

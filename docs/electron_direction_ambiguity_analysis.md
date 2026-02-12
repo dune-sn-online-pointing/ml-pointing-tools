@@ -186,5 +186,5 @@ The fact that ES+CC mixing hurts performance suggests we should:
 ## References
 
 - Model results: `/eos/user/e/evilla/dune/sn-tps/neural_networks/electron_direction/`
-- Analysis scripts: `/afs/cern.ch/work/e/evilla/private/dune/refactor_ml/electron_direction/ana/`
-- Configuration files: `/afs/cern.ch/work/e/evilla/private/dune/refactor_ml/electron_direction/json/`
+- Analysis scripts: `/afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/ana/`
+- Configuration files: `/afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/json/`

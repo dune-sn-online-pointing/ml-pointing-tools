@@ -1,4 +1,4 @@
-executable = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/electron_direction/condor/wrapper_ed_enhanced.sh
+executable = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/condor/wrapper_ed_enhanced.sh
 arguments             = three_plane_v29_100k_corrected.json
 output                = logs/three_plane_v29_100k_corrected.out
 error                 = logs/three_plane_v29_100k_corrected.err

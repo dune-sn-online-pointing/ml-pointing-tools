@@ -264,7 +264,7 @@ importance_X = performance_all_planes - performance_no_X
 
 ## Tools and Scripts
 
-**Analysis tool:** `/afs/cern.ch/work/e/evilla/private/dune/refactor_ml/electron_direction/ana/cnn_feature_interpretation.py`
+**Analysis tool:** `/afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/ana/cnn_feature_interpretation.py`
 
 **Usage:**
 ```bash

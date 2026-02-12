@@ -1,7 +1,7 @@
 # Repository Reorganization Summary
 
 **Date**: November 10, 2025
-**Repository**: `/afs/cern.ch/work/e/evilla/private/dune/refactor_ml`
+**Repository**: `/afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools`
 
 ## Overview
 
@@ -14,7 +14,6 @@ Cleaned and reorganized the ML repository for better structure, clarity, and mai
 ### 1. File Renaming
 - **Electron Direction**: `models/main.py` → `models/train_ed_hyperopt.py`
 - **Channel Tagging**: `models/main.py` → `models/train_ct_hyperopt.py`
-- **Main Track Identifier**: `models/main_production.py` (kept as is - already descriptive)
 
 **Rationale**: Descriptive names make it immediately clear what each script does.
 
@@ -35,7 +34,6 @@ Cleaned and reorganized the ML repository for better structure, clarity, and mai
 **Moved FROM `scripts/` TO task folders**:
 - `run_single_*.sh`, `run_three_*.sh`, `run_bootstrap_*.sh`, `run_electron_direction.sh` → `electron_direction/`
 - `run_channel_tagging.sh` → `channel_tagging/`
-- `run_mt_identifier.sh`, `train_mt_identifier_production.sh` → `mt_identifier/`
 
 **Moved TO `python/` (common tools)**:
 - `create_training_plots.py`
@@ -58,8 +56,7 @@ Cleaned and reorganized the ML repository for better structure, clarity, and mai
 ### 4. Documentation Reorganization
 
 **Active Documentation** (kept in `docs/`):
-- `Networks.md` - **NEW**: Comprehensive training registry with all ED/CT/MT experiments
-- `QUICK_REFERENCE.md` - Quick reference guide
+- `Networks.md` - **NEW**: Comprehensive training registry with all ED/CT experiments
 
 **Moved TO `temp/`** (outdated/refactoring-specific):
 - `BUG_FIX_DIRECTION_COLUMNS.txt`
@@ -95,9 +92,6 @@ Created comprehensive training registry documenting:
 - Data migration from cluster to volume images
 - Scaling plan documented
 
-**Main Track Identifier (MT)**:
-- Placeholder for v1 baseline
-
 **Best Practices section** added for:
 - Pre-submission checklist
 - Resource estimation guidelines
@@ -118,7 +112,6 @@ rm -rf outputs/
 **Migrated**:
 - `outputs/channel_tagging/` → EOS (~43K)
 - `outputs/electron_direction/` → EOS (~6.1M)
-- `outputs/mt_identifier/` → EOS (~8.7M)
 
 **Result**: No more `outputs/` directory in repo. All results now in permanent EOS storage.
 
@@ -153,7 +146,7 @@ rm -rf outputs/
 ## Final Structure
 
 ```
-refactor_ml/
+ml-pointing-tools/
 ├── channel_tagging/
 │   ├── ana/             # Analysis scripts
 │   ├── condor/          # HTCondor submission files
@@ -172,18 +165,8 @@ refactor_ml/
 │   ├── run_*.sh         # Run scripts
 │   └── ...
 │
-├── mt_identifier/
-│   ├── ana/             # Analysis scripts
-│   ├── condor/          # HTCondor submission files
-│   ├── json/            # Configuration files
-│   ├── logs/            # Job logs
-│   ├── models/          # Training scripts
-│   ├── run_mt_identifier.sh
-│   └── train_mt_identifier_production.sh
-│
 ├── docs/
-│   ├── Networks.md      # Training registry (NEW)
-│   └── QUICK_REFERENCE.md
+│   └── Networks.md      # Training registry (NEW)
 │
 ├── python/              # Common shared libraries
 │   ├── classification_libs.py

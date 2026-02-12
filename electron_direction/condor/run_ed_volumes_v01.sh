@@ -15,7 +15,7 @@ echo "Setting up LCG environment..."
 source /cvmfs/sft.cern.ch/lcg/views/LCG_104/x86_64-el9-gcc11-opt/setup.sh
 
 # Set working directory
-WORK_DIR="/afs/cern.ch/work/e/evilla/private/dune/refactor_ml/electron_direction"
+WORK_DIR="/afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction"
 cd ${WORK_DIR}/models || exit 1
 
 echo "Working directory: $(pwd)"

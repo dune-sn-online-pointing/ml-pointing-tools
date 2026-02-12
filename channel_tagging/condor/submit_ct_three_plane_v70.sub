@@ -1,8 +1,8 @@
-executable            = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/channel_tagging/condor/run_ct_three_plane_v70.sh
+executable            = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/condor/run_ct_three_plane_v70.sh
 
-output                = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/channel_tagging/logs/ct_three_plane_v70.$(ClusterId).$(ProcId).out
-error                 = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/channel_tagging/logs/ct_three_plane_v70.$(ClusterId).$(ProcId).err
-log                   = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/channel_tagging/logs/ct_three_plane_v70.$(ClusterId).log
+output                = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/logs/ct_three_plane_v70.$(ClusterId).$(ProcId).out
+error                 = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/logs/ct_three_plane_v70.$(ClusterId).$(ProcId).err
+log                   = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/logs/ct_three_plane_v70.$(ClusterId).log
 
 request_cpus          = 4
 request_memory        = 80GB

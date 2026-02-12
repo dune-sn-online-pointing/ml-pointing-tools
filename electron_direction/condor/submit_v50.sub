@@ -2,12 +2,12 @@
 # Version: v50 with corrected production dataset, no hyperopt
 # Dataset: 10k matched samples from prod_es
 
-executable = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/electron_direction/condor/condor_wrapper_3plane_simple.sh
-arguments = -j /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/electron_direction/json/three_plane_v50_10k.json
+executable = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/condor/condor_wrapper_3plane_simple.sh
+arguments = -j /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/json/three_plane_v50_10k.json
 
-output = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/electron_direction/logs/three_plane_v50_10k_$(ClusterId).out
-error = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/electron_direction/logs/three_plane_v50_10k_$(ClusterId).err
-log = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/electron_direction/logs/three_plane_v50_10k_$(ClusterId).log
+output = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/logs/three_plane_v50_10k_$(ClusterId).out
+error = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/logs/three_plane_v50_10k_$(ClusterId).err
+log = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/logs/three_plane_v50_10k_$(ClusterId).log
 
 # Resource requirements
 request_cpus = 1

@@ -182,8 +182,7 @@
 ## Recommended Execution Order
 
 ### Phase 1: Quick Wins (This Week)
-1. ✅ Fix dimension filtering for MT
-2. ✅ Add energy to predictions
+1. ✅ Add energy to predictions
 3. ✅ Fix cosine plot with 68% line
 4. **v17**: 200k with hyperopt (submit today)
 5. Energy binning analysis on v14 results

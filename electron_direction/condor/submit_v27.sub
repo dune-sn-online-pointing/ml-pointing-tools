@@ -1,7 +1,7 @@
 # Condor submit file for ED v27 - corrected data 100k
 universe                = vanilla
-executable              = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/electron_direction/condor/wrapper_ed_enhanced.sh
-arguments               = -j /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/electron_direction/json/three_plane_v27_100k_corrected.json
+executable              = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/condor/wrapper_ed_enhanced.sh
+arguments               = -j /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/json/three_plane_v27_100k_corrected.json
 
 # Resource requests
 request_cpus            = 4
@@ -14,15 +14,15 @@ request_disk            = 15GB
 requirements            = (OpSysAndVer =?= "AlmaLinux9")
 
 # Working directory
-initialdir              = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml
+initialdir              = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools
 
 # Environment
 getenv                  = True
 
 # Output files
-log                     = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/electron_direction/logs/ED_v27_$(Cluster).log
-output                  = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/electron_direction/logs/ED_v27_$(Cluster).out
-error                   = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/electron_direction/logs/ED_v27_$(Cluster).err
+log                     = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/logs/ED_v27_$(Cluster).log
+output                  = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/logs/ED_v27_$(Cluster).out
+error                   = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/logs/ED_v27_$(Cluster).err
 
 # Notification
 notification            = Error

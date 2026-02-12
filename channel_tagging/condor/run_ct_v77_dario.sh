@@ -15,7 +15,7 @@ echo ""
 
 # Source environment
 echo "Setting up environment..."
-cd /afs/cern.ch/work/e/evilla/private/dune/refactor_ml
+cd /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools
 source scripts/init.sh
 echo ""
 

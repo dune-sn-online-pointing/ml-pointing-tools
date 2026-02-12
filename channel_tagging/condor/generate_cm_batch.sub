@@ -1,8 +1,8 @@
-executable              = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/channel_tagging/ana/generate_cm_with_energy.py
-arguments               = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/training_output/channel_tagging/ct_volume_simple/$(dir)
-output                  = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/channel_tagging/logs/generate_cm_$(dir).out
-error                   = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/channel_tagging/logs/generate_cm_$(dir).err
-log                     = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/channel_tagging/logs/generate_cm_$(dir).log
+executable              = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/ana/generate_cm_with_energy.py
+arguments               = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/training_output/channel_tagging/ct_volume_simple/$(dir)
+output                  = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/logs/generate_cm_$(dir).out
+error                   = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/logs/generate_cm_$(dir).err
+log                     = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/logs/generate_cm_$(dir).log
 
 request_cpus            = 1
 request_memory          = 8GB

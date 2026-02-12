@@ -4,21 +4,9 @@
 
 ### Comprehensive Analysis (Primary Tools)
 
-These three scripts generate complete PDF reports with all metrics, plots, and insights:
+These scripts generate complete PDF reports with all metrics, plots, and insights:
 
-#### 1. Main Track Identifier Analysis
-```bash
-python mt_identifier/ana/comprehensive_mt_analysis.py <results_directory>
-```
-**Generates**: `simple_cnn_comprehensive_analysis.pdf` with:
-- Classification metrics (accuracy, precision, recall, F1, AUC-ROC)
-- Confusion matrix
-- Prediction distributions (linear + log scale)
-- Training history (loss, accuracy)
-- Energy-dependent performance
-- Sample predictions (best/worst)
-
-#### 2. Electron Direction Analysis
+#### 1. Electron Direction Analysis
 ```bash
 python electron_direction/ana/comprehensive_ed_analysis.py <results_directory>
 ```
@@ -35,7 +23,7 @@ python electron_direction/ana/comprehensive_ed_analysis.py <results_directory>
 - `cosine_energy_pdf.npz`: 2D histogram (energy bins × cosine bins)
 - `cosine_energy_pdf_visualization.png`: Heatmap visualization
 
-#### 3. Channel Tagging Analysis
+#### 2. Channel Tagging Analysis
 ```bash
 python channel_tagging/ana/comprehensive_ct_analysis.py <results_directory>
 ```
@@ -46,18 +34,6 @@ python channel_tagging/ana/comprehensive_ct_analysis.py <results_directory>
 - Prediction distributions per class
 - Energy-dependent performance
 - Volume integration analysis (if applicable)
-
----
-
-### Utility Scripts
-
-#### MT Results Rebuilder
-```bash
-python mt_identifier/ana/rebuild_mt_results.py <results_directory>
-```
-Regenerates `results.json` from existing model outputs when history/metrics are missing.
-
----
 
 ## Obsolete Scripts
 
@@ -83,10 +59,6 @@ channel_tagging/ana/
 
 electron_direction/ana/
 └── comprehensive_ed_analysis.py          # ✅ Active
-
-mt_identifier/ana/
-├── comprehensive_mt_analysis.py          # ✅ Active
-└── rebuild_mt_results.py                 # ✅ Active (utility)
 ```
 
-Total: **4 active analysis scripts** (down from 22 scripts)
+Total: **2 active analysis scripts** (down from 22 scripts)

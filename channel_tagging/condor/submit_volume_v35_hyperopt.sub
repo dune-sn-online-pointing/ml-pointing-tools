@@ -1,8 +1,8 @@
 # Condor submit file for CT v35 Hyperopt
 universe = vanilla
 executable = /usr/bin/python3
-arguments = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/channel_tagging/models/run_hyperopt_simple.py /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/channel_tagging/json/volume_v35_hyperopt_10k.json
-initialdir = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml
+arguments = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/models/run_hyperopt_simple.py /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/json/volume_v35_hyperopt_10k.json
+initialdir = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools
 
 # Resource requests
 request_cpus = 4
@@ -18,9 +18,9 @@ requirements = (OpSysAndVer =?= "AlmaLinux9")
 getenv = True
 
 # Output files
-log = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/channel_tagging/logs/CT_hyperopt_v35_$(Cluster).log
-output = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/channel_tagging/logs/CT_hyperopt_v35_$(Cluster).out
-error = /afs/cern.ch/work/e/evilla/private/dune/refactor_ml/channel_tagging/logs/CT_hyperopt_v35_$(Cluster).err
+log = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/logs/CT_hyperopt_v35_$(Cluster).log
+output = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/logs/CT_hyperopt_v35_$(Cluster).out
+error = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/logs/CT_hyperopt_v35_$(Cluster).err
 
 # Notification
 notification = Error

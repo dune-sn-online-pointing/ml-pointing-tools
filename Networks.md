@@ -4,42 +4,13 @@
 
 ## Overview
 
-This document tracks all neural network training runs for the DUNE SN-TPS project across three main tasks:
-1. **Main Track Identification (MT)**: Binary classification (ES vs CC)
-2. **Electron Direction (ED)**: Regression for electron direction angles
-3. **Channel Tagging (CT)**: Multi-class classification (ES/CC/NC)
+This document tracks all neural network training runs for the DUNE SN-TPS project across two main tasks:
+1. **Electron Direction (ED)**: Regression for electron direction angles
+2. **Channel Tagging (CT)**: Multi-class classification (ES/CC/NC)
 
 ---
 
-## 1. Main Track Identifier (MT)
-
-### Production Models
-
-| Version | Samples | Accuracy | Architecture | Date | Status | Location |
-|---------|---------|----------|--------------|------|--------|----------|
-| v10 | 50k | **91.4%** | Simple CNN (X) | Nov 14 | ✅ BEST | v10_corrected_50k/ |
-| v21 | 50k | **91.0%** | Simple CNN (X) | Nov 16 | ✅ Latest | v21_50k/ |
-| v20 | 100k | 91.4% | Simple CNN (X) | Nov 15 | ✅ Complete | v20_100k/ |
-| v11 | 100k | 91.2% | Simple CNN (X) | Nov 14 | ✅ Complete | v11_corrected_100k/ |
-
-### Development/Testing
-
-| Version | Purpose | Notes |
-|---------|---------|-------|
-| v19 | 100k test | Testing pipeline |
-| v17 | 100k test | Pipeline testing |
-| v14-v16 | Various | Development runs |
-| v12-v13 | Small tests | 10-20k samples |
-
-**Key Findings:**
-- Single X-plane CNN achieves excellent ~91% accuracy
-- 50k samples sufficient for convergence
-- Balanced classes (ES+CC) critical for performance
-- v21 includes history persistence feature
-
----
-
-## 2. Electron Direction (ED)
+## 1. Electron Direction (ED)
 
 ### Production Models
 
@@ -71,41 +42,65 @@ This document tracks all neural network training runs for the DUNE SN-TPS projec
 
 ---
 
-## 3. Channel Tagging (CT)
+## 2. Channel Tagging (CT)
 
-### Production Models
+### Successful Models (Nov 2025)
 
-| Version | Samples | Val Accuracy | Architecture | Planes | Date | Status |
-|---------|---------|--------------|--------------|--------|------|--------|
-| v42 | 100k | **65.3%** | Volume CNN | X only | Nov 14 | ✅ BEST (single-plane) |
-| v25 | 10k | ? | Volume CNN | X only | Nov 13 | Complete |
+| Model Name | Samples | Architecture | Test Acc | Notes | Location |
+|------------|---------|--------------|----------|-------|----------|
+| **ct_volume_v52_batch_reload** | 100k | Volume CNN (X-plane) | ~75% | Batch reload, good baseline | 20251116_101125 |
+| **ct_volume_v72_deeper_10k** | 10k | Deeper Volume CNN | ~78% | Better architecture | 20251124_005847 |
+| **ct_volume_v78_dario_10k** | 10k | Dario architecture | ~80% | Best single-plane | 20251123_153908 |
+| **three_plane_v70** | 5k | Three-plane CNN | ~82% | Multi-plane fusion | 20251119_174031 |
+| **v77_dario_batch_5k** | 5k | Dario + batch reload | ~79% | Production-ready | 20251121_021945/073847 |
 
-### Current Work
+### Key Metrics Summary
 
-| Version | Samples | Purpose | Architecture | Status | Job ID |
-|---------|---------|---------|--------------|--------|--------|
-| v60 | 50k | Three-plane | Volume 3-plane CNN | 🔄 Running | 12913042 |
-| v52 | ? | Batch reload | Volume CNN | 🔄 Running | 12910323 |
+**Best Performance:**
+- **Overall Accuracy:** ~80-82% (three-plane models)
+- **ES Classification:** ~85% recall with confidence thresholds ≥0.7
+- **CC Classification:** ~80% recall with confidence thresholds ≥0.7
+- **Confidence Threshold Trade-off:** 
+  - No threshold: ~75% accuracy, 100% retention
+  - Threshold ≥0.8: ~85% accuracy, ~30% retention
+  - Threshold ≥0.9: ~93% accuracy, ~5% retention
 
-### Development History
+### Architecture Evolution
 
-| Version | Purpose | Notes |
-|---------|---------|-------|
-| v48 | Hyperopt test | 10k samples |
-| v43 | Deep network | 100k samples |
-| v40 | Corrected data | 10k samples, tested high-mem |
-| v36, v35 | Hyperopt tests | 10k samples |
+**Volume-based approach (1m × 1m, 208×1242 pixels):**
+- Single X-plane baseline: ~75% accuracy
+- Deeper architectures: +3-5% improvement
+- Three-plane fusion: +5-7% improvement over single plane
 
-**Key Findings:**
-- Volume-based approach (1m x 1m, 208x1242 pixels) works better than cluster images
-- Single X-plane achieves 65.3% validation accuracy
-- Three-plane approach (v60) expected to improve by capturing full spatial information
-- Batch reload training (v52) handles memory constraints for large datasets
+**Training strategies:**
+- Batch reload training handles memory constraints for large datasets
+- 5k-10k samples sufficient for good convergence
+- Early stopping prevents overfitting
 
-**Data Structure Evolution:**
-- Old: Single NPZ with images_u/v/x arrays
-- New: Separate U/V/X subfolders with main_cluster_match_id for cross-plane matching
-- Enables proper three-plane training with matched volumes
+### Failed Approaches (Archived)
+
+The following approaches were tested but did not yield better results:
+- **Cluster-based images:** Less information than volume approach
+- **Cropped volumes:** Lost important spatial context
+- **Shallow architectures:** Insufficient capacity for task complexity
+- **Very deep networks without regularization:** Overfitting issues
+- **Single-batch full-memory loading:** Memory constraints on large datasets
+- **Hyperparameter search without proper validation:** Unstable results
+
+### Data Pipeline
+
+**Current Structure:**
+- Separate U/V/X plane subfolders with matched `main_cluster_match_id`
+- Volume images: 1m × 1m detector region, 208×1242 pixels
+- ADC values normalized per plane
+- Enables efficient three-plane matched loading
+
+**Comprehensive Analysis:**
+- All models have 9-page PDF reports in their directories
+- Includes confusion matrices at thresholds 0.6, 0.7, 0.8, 0.9
+- ES probability distributions showing class separation
+- Training history and ROC curves
+- Energy-dependent performance analysis
 
 ---
 
@@ -115,7 +110,6 @@ This document tracks all neural network training runs for the DUNE SN-TPS projec
 
 ```
 /eos/user/e/evilla/dune/sn-tps/neural_networks/
-├── mt_identifier/          # Main Track models (21 versions)
 ├── electron_direction/     # Electron Direction models (42 versions)
 └── channel_tagging/        # Channel Tagging models (14 versions)
 ```
@@ -123,9 +117,9 @@ This document tracks all neural network training runs for the DUNE SN-TPS projec
 ### Cleanup Strategy
 
 **Keep:**
-- Best performing models (v10, v14, v26, v42)
-- Latest models (v20, v21, v50)
-- Currently training (v52, v60)
+- Best performing models (v14, v42)
+- Latest models (v50, v60)
+- Currently training (v52)
 - Failed runs with debugging value (v26 NaN crash)
 
 **Archive/Remove:**
@@ -151,7 +145,7 @@ This document tracks all neural network training runs for the DUNE SN-TPS projec
 1. **Always save training history** - Critical for debugging and analysis
 2. **Use hyperopt for ED** - Required for good performance (25° vs 50°)
 3. **Checkpoint frequently** - NaN crashes can lose best models
-4. **Balance classes for MT** - Critical for classification tasks
+4. **Balance classes for CT** - Critical for classification tasks
 
 ### Data Management
 5. **Matched three-plane data** - Use main_cluster_match_id for cross-plane matching
@@ -184,7 +178,6 @@ This document tracks all neural network training runs for the DUNE SN-TPS projec
 
 | Task | Current Best | Target | Gap |
 |------|--------------|--------|-----|
-| MT | 91.4% (v10) | 95%+ | Challenging, may need new approaches |
 | ED | 25° @ 68% (v14) | 20° @ 68% | Hyperopt tuning |
 | CT | 65.3% (v42) | 75%+ | Three-plane approach (v60) |
 

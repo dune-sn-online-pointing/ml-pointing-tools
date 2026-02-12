@@ -546,102 +546,6 @@ This file tracks successful training runs for each task. Only completed training
 
 ---
 
-## Main Track Identifier (MT)
-
-**Goal**: Distinguish main electron tracks from background in ES clusters.
-
-**Dataset**: Cluster images (128×32 pixels) from `/eos/home-e/evilla/dune/sn-tps/production_{es,cc}/cluster_images_nov11/`
-- ES: ~4,239 files
-- CC: ~3,703 files
-
-**Evaluation Metric**: Binary classification accuracy, AUC-ROC
-
-**Current Best**: v10 with 91.4% accuracy, 93.7% AUC-ROC
-
-### Successful Training Runs (November 2025)
-
-#### v10: Production 100k Balanced - ✅ COMPLETED ⭐ BEST SO FAR
-- **Job ID**: 12833781
-- **Config**: `mt_identifier/json/production_v10_100k.json`
-- **Output**: `v10_100k_nov13/mt_identifier_simple_cnn_20251113_145400/`
-- **Data**: 100k balanced (50k ES + 50k CC) from nov11 (128×32)
-- **Architecture**: Simple CNN, 3 conv layers, 32 filters, 2 dense (128 units)
-- **Training**: 100 epochs, early stopping
-- **Resources**: 40GB RAM (increased from 21GB after memory overflow)
-- **Results**:
-  - **Accuracy: 91.4%** ⭐
-  - **Precision: 95.8%**
-  - **Recall: 86.6%**
-  - **F1-Score: 90.9%**
-  - **AUC-ROC: 93.7%** ⭐
-- **Status**: ✅ Completed - Excellent performance on large dataset
-
-#### v11: Production 10k Balanced - ⏳ RUNNING
-- **Job ID**: 12833784
-- **Config**: `mt_identifier/json/production_v11_10k.json`
-- **Data**: 10k balanced (5k ES + 5k CC) from nov11
-- **Architecture**: Simple CNN (same as v10)
-- **Training**: 100 epochs, early stopping patience=15
-- **Resources**: 16GB RAM
-- **Purpose**: Test if smaller dataset achieves comparable performance
-- **Status**: ⏳ Running
-
-#### v12: Production 20k Balanced - ⏳ RUNNING
-- **Job ID**: 12833785
-- **Config**: `mt_identifier/json/production_v12_20k.json`
-- **Data**: 20k balanced (10k ES + 10k CC) from nov11
-- **Architecture**: Simple CNN (same as v10)
-- **Training**: 100 epochs, early stopping patience=15
-- **Resources**: 20GB RAM
-- **Purpose**: Test medium dataset size
-- **Status**: ⏳ Running
-
-#### v13: Production Incremental Loading - ⏳ RUNNING
-- **Job ID**: 12833787
-- **Config**: `mt_identifier/json/production_v13_incremental.json`
-- **Script**: `mt_identifier/models/train_mt_incremental.py` (NEW)
-- **Data**: 1000 samples per class per batch, 20 batches
-  - Total exposure: 40k samples (20k ES + 20k CC)
-  - Loads new random batch every 5 epochs
-- **Architecture**: Simple CNN, 4 conv layers, 64 filters (enhanced)
-- **Training**: 5 epochs per batch, 20 batches = 100 total epochs
-- **Resources**: 16GB RAM (vs 40GB for v10)
-- **Purpose**: Memory-efficient training with dataset refresh strategy
-- **Status**: ⏳ Running (new incremental loading system)
-- **Note**: First implementation of incremental loading for MT task
-
-#### v16: Production 100k Balanced (FIXED DATA) - ⏳ SUBMITTED
-- **Config**: `mt_identifier/json/production_v16_100k.json`
-- **Data**: 100k balanced (50k ES + 50k CC) from prod_{es,cc}
-  - `/eos/home-e/evilla/dune/sn-tps/prod_es/es_prod_cluster_images_tick3_ch2_min2_tot3_e2p0/X`
-  - `/eos/home-e/evilla/dune/sn-tps/prod_cc/cc_prod_cluster_images_tick3_ch2_min2_tot3_e2p0/X`
-- **Architecture**: Simple CNN, 4 conv layers, 64 filters, 2 dense (256 units)
-- **Training**: 150 epochs, early stopping patience=20
-- **Resources**: 20GB RAM, 6 CPUs
-- **Purpose**: 🔄 RESUBMITTED with fixed main cluster selection (uses reconstructed energy)
-- **Baseline**: v10 achieved 91.4% accuracy, 93.7% AUC-ROC
-- **Status**: ⏳ Submitted
-- **Note**: Same architecture as v10, trained on data with corrected cluster selection
-
-#### v9: Production nov11 Balanced (10k) - ✅ COMPLETED
-- **Job ID**: 10280765
-- **Config**: `mt_identifier/json/production_v9_nov11_10k.json`
-- **Data**: 10k balanced (5k ES + 5k CC) from corrected nov11 paths
-  - Fixed path issue: `/eos/home-e/evilla/` (not `/eos/user/e/evilla/`)
-  - Pure nov11 data with consistent 128×32 dimensions
-- **Architecture**: Simple CNN, 3 conv layers, 32 filters, 2 dense (128 units)
-- **Training**: 100 epochs, early stopping patience=15
-- **Resources**: 8GB RAM, CPU only
-- **Status**: ✅ Completed (baseline for comparison with v11)
-
-### Critical Path Fix
-
-**Issue**: Previous runs failed with dimension mismatch (128×32 vs 128×16)
-**Root Cause**: Config pointed to `/eos/user/e/evilla/` which had mixed nov10/nov11 data
-**Solution**: Updated to `/eos/home-e/evilla/` with pure nov11 (128×32) data
-
----
-
 ## Training Best Practices
 
 1. **Naming Convention**: Always use proper version names in output directories
@@ -671,16 +575,16 @@ This file tracks successful training runs for each task. Only completed training
 
 ## Data Fix (November 14, 2025)
 
-**Critical Update - Main Track Selection Logic Fixed**
+**Critical Update - Cluster Selection Logic Fixed**
 
-All cluster image datasets were regenerated with corrected main track selection:
+All cluster image datasets were regenerated with corrected cluster selection:
 - **Previous**: Selected cluster with highest `true_particle_energy`
 - **Fixed**: Selects cluster with highest `reconstructed_energy` (actual cluster energy)
 - **Impact**: More physically accurate labels - matches what detector actually measures
 - **Status**: cat000001 clusters regenerated, all downstream images updated
 
 **Debug Verification** (make_clusters.cpp with `-d` flag):
-- 94% of selected main tracks are electrons (PDG=11) ✓
+- 94% of selected clusters are electrons (PDG=11) ✓
 - 6% are photons (PDG=22) - only when no electron cluster exists in that view
 - Confirmed: Selection based on reconstructed energy works correctly
 
@@ -737,14 +641,6 @@ All cluster image datasets were regenerated with corrected main track selection:
 - **Training**: 50 epochs, batch=16, early stopping patience=10
 - **Resources**: 1 CPU, 12GB RAM, 1 GPU
 - **Status**: Idle, waiting for GPU
-
-### MT Identifier Update
-
-#### Job 10629869 - ⏳ RUNNING
-- Resubmission of v8 after fixing environment setup issues
-- Previous attempts failed due to missing PYTHONPATH
-- Now using init.sh for proper environment
-- Running for 16+ minutes, loading data successfully
 
 ### ED Loss Function Experiments - Results
 

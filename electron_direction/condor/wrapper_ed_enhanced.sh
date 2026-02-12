@@ -33,7 +33,7 @@ echo "JSON config: $JSON_CONFIG"
 echo "========================================="
 
 # Navigate to project directory
-PROJECT_DIR="/afs/cern.ch/work/e/evilla/private/dune/refactor_ml"
+PROJECT_DIR="/afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools"
 cd "$PROJECT_DIR"
 
 # Setup environment using init.sh
