@@ -1,4 +1,0 @@
-perl: symbol lookup error: /cvmfs/larsoft.opensciencegrid.org/products/mrb/v6_09_11/slf7.x86_64/CPAN/lib/perl5/x86_64-linux-thread-multi/auto/Cwd/Cwd.so: undefined symbol: Perl_xs_apiversion_bootcheck
-/pool/condor/dir_2535545/tmp/upsyUvCvo: line 376: lsb_release: command not found
-/pool/condor/dir_2535545/tmp/upsyUvCvo: line 376: lsb_release: command not found
-/pool/condor/dir_2535545/tmp/upsyUvCvo: line 376: test: too many arguments

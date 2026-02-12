@@ -6,4 +6,10 @@ training_output/
 temp/
 electron_direction/test_output/
 */logs/*
+**/condor/logs/*
+**/condor/error/*
+**/condor/output/*
+!**/condor/logs/.gitkeep
+!**/condor/error/.gitkeep
+!**/condor/output/.gitkeep
 test/artifacts/

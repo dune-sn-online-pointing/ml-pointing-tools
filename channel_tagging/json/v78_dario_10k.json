@@ -1,0 +1,44 @@
+{
+  "model_name": "ct_volume_v78_dario_10k",
+  "output_folder": "/eos/user/e/evilla/dune/sn-tps/neural_networks/channel_tagging",
+  "es_directory": "/eos/home-e/evilla/dune/sn-tps/prod_es/es_production_volume_images_tick3_ch2_min2_tot3_e2p0/X",
+  "cc_directory": "/eos/home-e/evilla/dune/sn-tps/prod_cc/cc_production_volume_images_tick3_ch2_min2_tot3_e2p0/X",
+  "task_label": "channel_tagging_volume",
+  "plane": "X",
+  "max_samples_per_class": 10000,
+  "reload_every_n_epochs": 7,
+  "train_split": 0.7,
+  "val_split": 0.15,
+  "epochs": 100,
+  "batch_size": 16,
+  "learning_rate": 0.0001,
+  "model_parameters": {
+    "filter_list": [
+      28,
+      28,
+      48,
+      64,
+      80,
+      96,
+      112,
+      128
+    ],
+    "kernel_sizes": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+    ],
+    "dropout_rate": 0.4,
+    "dense_units": [
+      256,
+      128,
+      64
+    ]
+  },
+  "batch_samples": 10000
+}

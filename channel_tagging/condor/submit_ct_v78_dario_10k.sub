@@ -1,0 +1,27 @@
+############################################################
+# HTCondor Submit File for Channel Tagging v78_dario
+# Architecture: Dario's specified layers with 10k batch reload every 7 epochs
+############################################################
+
+# Job configuration
+executable              = condor/run_ct_v78_dario_10k.sh
+
+# Output and error logs
+output                  = logs/ct_v78_dario_10k_$(ClusterId).out
+error                   = logs/ct_v78_dario_10k_$(ClusterId).err
+log                     = logs/ct_v78_dario_10k_$(ClusterId).log
+
+# Resource requests
+request_cpus            = 4
+request_memory          = 60GB
+request_gpus            = 1
+
+# Time limit
++JobFlavour             = "nextweek"
+
+# Notification
+notification            = Error
+notify_user             = evilla@cern.ch
+
+# Queue the job
+queue 1
