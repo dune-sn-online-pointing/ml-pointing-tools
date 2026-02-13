@@ -1,6 +1,6 @@
 #!/bin/bash
 # Condor submit file for ED v21 (mixed ES+CC with fixed params from v14)
-executable            = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/scripts/electron_direction/condor/wrapper_ed_enhanced.sh
+executable            = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/condor/wrapper_ed_enhanced.sh
 arguments             = -j electron_direction/json/three_plane_v21_200k_mixed.json
 output                = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/logs/ED_v21_mixed_$(ClusterId).out
 error                 = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/logs/ED_v21_mixed_$(ClusterId).err

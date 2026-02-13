@@ -1,4 +1,4 @@
-executable = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/scripts/channel_tagging/condor/condor_wrapper.sh
+executable = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/condor/condor_wrapper.sh
 arguments = volume_v51_10k
 output = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/logs/CT_v51_$(ClusterId).out
 error = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/logs/CT_v51_$(ClusterId).err

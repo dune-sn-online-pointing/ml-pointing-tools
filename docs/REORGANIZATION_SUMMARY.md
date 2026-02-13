@@ -154,7 +154,7 @@ ml-pointing-tools/
 │   ├── logs/            # Job logs
 │   ├── models/          # Training scripts
 │   ├── run_channel_tagging.sh
-│   └── scripts/channel_tagging/train_channel_tagging.sh
+│   └── train_channel_tagging.sh
 │
 ├── electron_direction/
 │   ├── ana/             # Analysis scripts

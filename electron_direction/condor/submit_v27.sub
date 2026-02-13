@@ -1,6 +1,6 @@
 # Condor submit file for ED v27 - corrected data 100k
 universe                = vanilla
-executable              = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/scripts/electron_direction/condor/wrapper_ed_enhanced.sh
+executable              = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/condor/wrapper_ed_enhanced.sh
 arguments               = -j /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/json/three_plane_v27_100k_corrected.json
 
 # Resource requests

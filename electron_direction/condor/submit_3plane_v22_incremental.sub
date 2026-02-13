@@ -1,6 +1,6 @@
 #!/bin/bash
 # Condor submit file for ED v22 (mixed ES+CC with incremental loading)
-executable            = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/scripts/electron_direction/condor/condor_wrapper_3plane_incremental.sh
+executable            = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/condor/condor_wrapper_3plane_incremental.sh
 arguments             = -j electron_direction/json/three_plane_v22_200k_incremental.json
 output                = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/logs/ED_v22_incremental_$(ClusterId).out
 error                 = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/logs/ED_v22_incremental_$(ClusterId).err

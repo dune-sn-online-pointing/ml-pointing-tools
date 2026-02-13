@@ -1,6 +1,6 @@
 #!/bin/bash
 # Condor submit file for ED v23 (mixed ES+CC with hyperopt)
-executable            = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/scripts/electron_direction/condor/wrapper_ed_enhanced.sh
+executable            = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/condor/wrapper_ed_enhanced.sh
 arguments             = -j electron_direction/json/three_plane_v23_200k_mixed_hyperopt.json
 output                = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/logs/ED_v23_mixed_hyperopt_$(ClusterId).out
 error                 = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/logs/ED_v23_mixed_hyperopt_$(ClusterId).err
