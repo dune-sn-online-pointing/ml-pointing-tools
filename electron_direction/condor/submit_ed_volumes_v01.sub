@@ -4,11 +4,11 @@
 # Three-plane CNN training on ES production volume clusters
 #
 
-executable              = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/condor/run_ed_volumes_v01.sh
+executable              = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/scripts/electron_direction/condor/run_ed_volumes_v01.sh
 arguments               = 
-output                  = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/condor/logs/ed_volumes_v01_$(ClusterId).$(ProcId).out
-error                   = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/condor/logs/ed_volumes_v01_$(ClusterId).$(ProcId).err
-log                     = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/condor/logs/ed_volumes_v01_$(ClusterId).log
+output                  = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/scripts/electron_direction/condor/logs/ed_volumes_v01_$(ClusterId).$(ProcId).out
+error                   = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/scripts/electron_direction/condor/logs/ed_volumes_v01_$(ClusterId).$(ProcId).err
+log                     = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/scripts/electron_direction/condor/logs/ed_volumes_v01_$(ClusterId).log
 
 # Request GPU resources
 request_gpus            = 1

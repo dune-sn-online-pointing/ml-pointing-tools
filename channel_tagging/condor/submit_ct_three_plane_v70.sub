@@ -1,4 +1,4 @@
-executable            = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/condor/run_ct_three_plane_v70.sh
+executable            = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/scripts/channel_tagging/condor/run_ct_three_plane_v70.sh
 
 output                = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/logs/ct_three_plane_v70.$(ClusterId).$(ProcId).out
 error                 = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/logs/ct_three_plane_v70.$(ClusterId).$(ProcId).err

@@ -2,7 +2,7 @@
 # Version: v51 with corrected production dataset, no hyperopt
 # Dataset: 100k matched samples from prod_es
 
-executable = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/condor/condor_wrapper_3plane_simple.sh
+executable = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/scripts/electron_direction/condor/condor_wrapper_3plane_simple.sh
 arguments = -j /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/json/v51.json
 
 output = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/logs/three_plane_v51_$(ClusterId).out

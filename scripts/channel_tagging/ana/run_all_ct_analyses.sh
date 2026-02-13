@@ -3,8 +3,9 @@
 # Run comprehensive analysis on all successful CT model directories
 #
 
+REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 CT_BASE="/eos/user/e/evilla/dune/sn-tps/neural_networks/channel_tagging"
-SCRIPT_DIR="/afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/ana"
+SCRIPT_DIR="$REPO_DIR/channel_tagging/ana"
 
 echo "=========================================="
 echo "Running CT Analysis on All Models"
