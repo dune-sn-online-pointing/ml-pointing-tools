@@ -1,5 +1,5 @@
 # HTCondor submission for ED v52 (hyperopt like v14)
-executable = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/scripts/condor/wrapper_ed_v52_hyperopt.sh
+executable = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/scripts/wrapper_ed_v52_hyperopt.sh
 arguments = -j /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/json/v52.json
 
 output = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/condor/logs/three_plane_v52_hyperopt_$(ClusterId).out

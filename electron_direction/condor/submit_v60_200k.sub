@@ -1,5 +1,5 @@
 # HTCondor submit file for v60 (200k ES+CC samples)
-executable = electron_direction/scripts/condor/wrapper_v55.sh
+executable = electron_direction/scripts/wrapper_v55.sh
 arguments = -j electron_direction/json/v60_200k_es_cc.json
 output = electron_direction/condor/logs/ed_v60_200k_es_cc_$(ClusterId).out
 error = electron_direction/condor/logs/ed_v60_200k_es_cc_$(ClusterId).err
