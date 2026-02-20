@@ -29,7 +29,19 @@ LCG_RELEASE="LCG_106_cuda/x86_64-el9-gcc11-opt"
 LCG_VIEW="/cvmfs/sft.cern.ch/lcg/views/$LCG_RELEASE"
 
 if [ -f "$LCG_VIEW/setup.sh" ]; then
+    # Some external setup scripts are not safe under nounset (-u).
+    # Temporarily disable it when sourcing, then restore caller behavior.
+    case $- in
+        *u*) HAD_NOUNSET=1 ;;
+        *) HAD_NOUNSET=0 ;;
+    esac
+    if [ "$HAD_NOUNSET" -eq 1 ]; then
+        set +u
+    fi
     source "$LCG_VIEW/setup.sh"
+    if [ "$HAD_NOUNSET" -eq 1 ]; then
+        set -u
+    fi
     echo "✓ Sourced LCG environment: $LCG_RELEASE"
 else
     echo "⚠ Warning: LCG environment not found at $LCG_VIEW"
