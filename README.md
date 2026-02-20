@@ -9,7 +9,9 @@ This repository hosts neural network tooling for two tasks in DUNE SN-TPS:
 
 - channel_tagging/     CT training, configs, analysis, condor
 - electron_direction/  ED training, configs, analysis, condor
-- python/              Shared data loaders and utilities
+- python/              Shared utilities (common across tasks)
+- channel_tagging/lib/ Task-specific CT data loaders
+- electron_direction/lib/ Task-specific ED data loaders
 - scripts/             Environment setup and helpers
 - json/                Shared/legacy configs
 - docs/                Documentation and summaries

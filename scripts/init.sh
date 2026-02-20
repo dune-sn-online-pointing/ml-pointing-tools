@@ -11,6 +11,8 @@ export REPO_DIR="$(cd "$SCRIPTS_DIR/.." && pwd)"
 
 # Python modules directory
 export PYTHON_DIR="$REPO_DIR/python"
+export CT_LIB_DIR="$REPO_DIR/channel_tagging/lib"
+export ED_LIB_DIR="$REPO_DIR/electron_direction/lib"
 
 # Local packages directory (for healpy, etc.)
 export LOCAL_PACKAGES_DIR="$REPO_DIR/local_packages"
@@ -34,8 +36,8 @@ else
     echo "  Using system Python instead"
 fi
 
-# Add Python modules to PYTHONPATH
-export PYTHONPATH="$PYTHON_DIR:$PYTHONPATH"
+# Add task-specific libs and shared Python modules to PYTHONPATH
+export PYTHONPATH="$CT_LIB_DIR:$ED_LIB_DIR:$PYTHON_DIR:$PYTHONPATH"
 
 # Add local packages to PYTHONPATH (for healpy, hyperopt if needed)
 if [ -d "$LOCAL_PACKAGES_DIR/lib/python3.11/site-packages" ]; then
@@ -87,6 +89,8 @@ ensure_dir() {
 # Print environment information
 print_info "ML for Pointing Environment"
 print_info "Repository: $REPO_DIR"
+print_info "CT libs: $CT_LIB_DIR"
+print_info "ED libs: $ED_LIB_DIR"
 print_info "Python modules: $PYTHON_DIR"
 print_info "Data directory: $DATA_DIR"
 print_info "Output directory: $OUTPUT_DIR"

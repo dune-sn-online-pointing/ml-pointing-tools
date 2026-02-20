@@ -27,6 +27,7 @@ except Exception:
 
 # Ensure local python package directory is on the path, then import project libs
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'python'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lib'))
 
 import general_purpose_libs as gpl
 import classification_libs as cl
@@ -229,8 +230,6 @@ def main():
         print("\n" + "="*70)
         print("USING STREAMING DATA LOADER (generator-based)")
         print("="*70)
-        import sys
-        sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'python'))
         import streaming_data_loader as sdl
         
         preprocessing_config = config.get('preprocessing', None)
