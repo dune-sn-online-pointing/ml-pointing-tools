@@ -2,8 +2,12 @@
 **/*.cc
 *.cc
 local_packages/
+/dat/
+/output/
 training_output/
+Training_output/
 temp/
+Temp/
 electron_direction/test_output/
 */logs/*
 **/condor/logs/*
@@ -13,3 +17,5 @@ electron_direction/test_output/
 !**/condor/error/.gitkeep
 !**/condor/output/.gitkeep
 test/artifacts/
+channel_tagging/models/v77_dario_test_*/
+electron_direction/models/volumes_local/

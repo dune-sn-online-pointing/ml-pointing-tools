@@ -1,6 +1,6 @@
 # Condor submit file for ED v26 - corrected data 50k
 universe                = vanilla
-executable              = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/condor/wrapper_ed_enhanced.sh
+executable              = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/scripts/condor/wrapper_ed_enhanced.sh
 arguments               = -j /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/json/three_plane_v26_50k_corrected.json
 
 # Resource requests
@@ -20,9 +20,9 @@ initialdir              = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-to
 getenv                  = True
 
 # Output files
-log                     = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/logs/ED_v26_$(Cluster).log
-output                  = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/logs/ED_v26_$(Cluster).out
-error                   = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/logs/ED_v26_$(Cluster).err
+log                     = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/condor/logs/ED_v26_$(Cluster).log
+output                  = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/condor/logs/ED_v26_$(Cluster).out
+error                   = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/condor/logs/ED_v26_$(Cluster).err
 
 # Notification
 notification            = Error

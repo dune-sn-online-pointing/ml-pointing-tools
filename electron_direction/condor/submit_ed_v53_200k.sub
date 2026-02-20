@@ -1,9 +1,0 @@
-executable            = wrapper_ed_v53_200k.sh
-arguments             = -j /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/json/v53_200k_hyperopt_fixed.json
-output                = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/logs/ed_v53.$(ClusterId).$(ProcId).out
-error                 = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/logs/ed_v53.$(ClusterId).$(ProcId).err
-log                   = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/logs/ed_v53.$(ClusterId).log
-request_GPUs          = 1
-request_memory        = 100GB
-+JobFlavour           = "tomorrow"
-queue 1

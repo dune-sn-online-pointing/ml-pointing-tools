@@ -1,9 +1,0 @@
-executable            = wrapper_ct_v60_three_plane.sh
-arguments             = -j /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/json/v60_three_plane.json
-output                = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/logs/ct_v60.$(ClusterId).$(ProcId).out
-error                 = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/logs/ct_v60.$(ClusterId).$(ProcId).err
-log                   = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/logs/ct_v60.$(ClusterId).log
-request_GPUs          = 1
-request_memory        = 150GB
-+JobFlavour           = "tomorrow"
-queue 1

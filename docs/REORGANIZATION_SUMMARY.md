@@ -32,8 +32,8 @@ Cleaned and reorganized the ML repository for better structure, clarity, and mai
 ### 3. Reorganized Scripts
 
 **Moved FROM `scripts/` TO task folders**:
-- `run_single_*.sh`, `run_three_*.sh`, `run_bootstrap_*.sh`, `run_electron_direction.sh` → `electron_direction/`
-- `run_channel_tagging.sh` → `channel_tagging/`
+- `run_single_*.sh`, `run_three_*.sh`, `run_bootstrap_*.sh`, `run_electron_direction.sh` → `electron_direction/scripts/`
+- `run_channel_tagging.sh` → `channel_tagging/scripts/`
 
 **Moved TO `python/` (common tools)**:
 - `create_training_plots.py`
@@ -153,8 +153,8 @@ ml-pointing-tools/
 │   ├── json/            # Configuration files
 │   ├── logs/            # Job logs
 │   ├── models/          # Training scripts
-│   ├── run_channel_tagging.sh
-│   └── train_channel_tagging.sh
+│   ├── scripts/run_channel_tagging.sh
+│   └── scripts/train_channel_tagging.sh
 │
 ├── electron_direction/
 │   ├── ana/             # Analysis scripts
@@ -162,7 +162,7 @@ ml-pointing-tools/
 │   ├── json/            # Configuration files
 │   ├── logs/            # Job logs
 │   ├── models/          # Training scripts (train_ed_hyperopt.py, etc.)
-│   ├── run_*.sh         # Run scripts
+│   ├── scripts/         # Task-specific scripts
 │   └── ...
 │
 ├── docs/

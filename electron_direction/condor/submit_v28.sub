@@ -1,9 +1,0 @@
-executable = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/condor/wrapper_ed_enhanced.sh
-arguments             = three_plane_v28_50k_corrected.json
-output                = logs/three_plane_v28_50k_corrected.out
-error                 = logs/three_plane_v28_50k_corrected.err
-log                   = logs/three_plane_v28_50k_corrected.log
-request_gpus          = 1
-request_memory        = 24GB
-+JobFlavour           = "nextweek"
-queue

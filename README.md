@@ -30,7 +30,7 @@ This sets PYTHONPATH and points to the LCG CUDA stack when available.
 Channel Tagging (local run):
 
 ```bash
-./channel_tagging/run_channel_tagging.sh -j channel_tagging/json/production_training.json
+./channel_tagging/scripts/run_channel_tagging.sh -j channel_tagging/json/volume_v42_corrected_100k.json
 ```
 
 Electron Direction (local run):

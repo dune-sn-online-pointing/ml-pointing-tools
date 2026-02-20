@@ -2,12 +2,12 @@
 # Version: v14 with hyperopt, gradient clipping, patience 30, save predictions
 # Dataset: 10k matched samples from nov11
 
-executable = electron_direction/condor/condor_wrapper_3plane_simple.sh
+executable = electron_direction/scripts/condor/condor_wrapper_3plane_simple.sh
 arguments = -j electron_direction/json/three_plane_v14_10k_hyperopt.json
 
-output = electron_direction/logs/three_plane_v14_10k_hyperopt_$(ClusterId).out
-error = electron_direction/logs/three_plane_v14_10k_hyperopt_$(ClusterId).err
-log = electron_direction/logs/three_plane_v14_10k_hyperopt_$(ClusterId).log
+output = electron_direction/condor/logs/three_plane_v14_10k_hyperopt_$(ClusterId).out
+error = electron_direction/condor/logs/three_plane_v14_10k_hyperopt_$(ClusterId).err
+log = electron_direction/condor/logs/three_plane_v14_10k_hyperopt_$(ClusterId).log
 
 # Resource requirements
 request_cpus = 1

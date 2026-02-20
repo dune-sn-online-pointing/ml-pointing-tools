@@ -1,8 +1,0 @@
-2025-11-20 01:21:13.625101: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
-To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
-/afs/cern.ch/user/e/evilla/.local/lib/python3.9/site-packages/keras/src/layers/convolutional/base_conv.py:113: UserWarning: Do not pass an `input_shape`/`input_dim` argument to a layer. When using Sequential models, prefer using an `Input(shape)` object as the first layer in the model instead.
-  super().__init__(activity_regularizer=activity_regularizer, **kwargs)
-WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
-W0000 00:00:1763600964.077072     108 gpu_device.cc:2342] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.
-Skipping registering GPU devices...
-2025-11-20 02:10:31.185824: W external/local_xla/xla/tsl/framework/cpu_allocator_impl.cc:84] Allocation of 25559040000 exceeds 10% of free system memory.

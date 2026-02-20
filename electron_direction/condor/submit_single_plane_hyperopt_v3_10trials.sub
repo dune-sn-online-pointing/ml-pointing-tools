@@ -1,9 +1,0 @@
-executable            = scripts/run_single_plane_hyperopt_10trials.sh
-output                = logs/single_plane_x_hyperopt_v3_10trials_$(ClusterId).out
-error                 = logs/single_plane_x_hyperopt_v3_10trials_$(ClusterId).err
-log                   = logs/single_plane_x_hyperopt_v3_10trials_$(ClusterId).log
-
-+JobFlavour           = "testmatch"
-request_gpus          = 1
-
-queue
