@@ -1,6 +1,6 @@
 # Condor submit file for CT v42 - corrected data 100k
 universe                = vanilla
-executable              = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/scripts/condor/wrapper_ct_simple.sh
+executable              = /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/scripts/wrapper_ct_simple.sh
 arguments               = -j /afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/json/volume_v42_corrected_100k.json
 
 # Resource requests

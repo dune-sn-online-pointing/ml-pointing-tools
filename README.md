@@ -40,5 +40,5 @@ python3 electron_direction/models/train_three_plane_simple.py \
   -j electron_direction/json/three_plane_v50_10k.json
 ```
 
-For job submission and model tracking, see docs/Networks.md and task-specific
-condor wrappers under channel_tagging/condor and electron_direction/condor.
+For job submission and model tracking, see docs/BestModels.dat and task-specific
+condor submit files under channel_tagging/condor and electron_direction/condor.

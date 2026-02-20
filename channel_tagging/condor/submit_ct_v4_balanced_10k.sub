@@ -2,7 +2,7 @@
 # Version: v4 deeper (4 conv, 64 filters), FIXED image flipping
 # Dataset: balanced 10k (5k ES + 5k CC) from nov11
 
-executable = channel_tagging/scripts/condor/wrapper_ct_simple.sh
+executable = channel_tagging/scripts/wrapper_ct_simple.sh
 arguments = -j channel_tagging/json/volume_v4_balanced_10k.json
 
 output = channel_tagging/condor/logs/CT_v4_balanced_10k_$(ClusterId).out
