@@ -89,6 +89,33 @@ def load_results(results_dir):
         predictions = np.load(pred_path_alt, allow_pickle=True)
     else:
         predictions = None
+
+    # Normalize prediction file schemas across different trainers.
+    # Expected by downstream plots:
+    #   - predictions['predictions'] : (N, n_classes) probabilities
+    #   - predictions['true_labels'] : (N,) integer labels
+    if predictions is not None:
+        keys = set(predictions.files) if hasattr(predictions, "files") else set(predictions.keys())
+
+        # Legacy CT volume trainer format
+        if 'predictions' not in keys and 'y_prob' in keys:
+            prob = predictions['y_prob']
+            pred_dict = {k: predictions[k] for k in keys}
+            pred_dict['predictions'] = prob
+            predictions = pred_dict
+            keys = set(pred_dict.keys())
+
+        if 'true_labels' not in keys:
+            if 'y_true' in keys:
+                pred_dict = dict(predictions)
+                pred_dict['true_labels'] = pred_dict['y_true']
+                predictions = pred_dict
+                keys = set(pred_dict.keys())
+            elif 'true_labels' not in keys and 'true' in keys:
+                pred_dict = dict(predictions)
+                pred_dict['true_labels'] = pred_dict['true']
+                predictions = pred_dict
+                keys = set(pred_dict.keys())
     
     # Convert binary predictions to 2-class format if needed
     if predictions is not None and 'predictions' in predictions:

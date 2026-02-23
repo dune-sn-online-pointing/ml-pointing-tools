@@ -61,7 +61,13 @@ class CNNFeatureInterpreter:
         
         print(f"Loaded model: {self.model_path.name}")
         print(f"  Validation samples: {len(self.predictions)}")
-        print(f"  Model architecture: {self.config['model']['architecture']}")
+        model_cfg = self.config.get('model', {}) if isinstance(self.config, dict) else {}
+        arch_desc = (
+            model_cfg.get('architecture')
+            or model_cfg.get('name')
+            or f"input_shape={model_cfg.get('input_shape', 'unknown')}"
+        )
+        print(f"  Model description: {arch_desc}")
     
     @staticmethod
     def _angular_loss(y_true, y_pred):

@@ -1,0 +1,39 @@
+{
+  "data": {
+    "data_directories": [
+      "test/artifacts/fixtures/ed_three_plane"
+    ],
+    "train_split": 0.5,
+    "max_samples": 6,
+    "shuffle": true
+  },
+  "model": {
+    "name": "tiny",
+    "input_shape": [
+      128,
+      16,
+      1
+    ],
+    "output_dim": 3,
+    "normalize_output": true,
+    "n_conv_layers": 1,
+    "n_filters": 4,
+    "kernel_size": 3,
+    "n_dense_layers": 1,
+    "n_dense_units": 16
+  },
+  "training": {
+    "loss": "cosine_similarity",
+    "epochs": 1,
+    "batch_size": 2,
+    "learning_rate": 0.001,
+    "early_stopping_patience": 1,
+    "reduce_lr_patience": 1,
+    "reduce_lr_factor": 0.5,
+    "min_lr": 1e-06
+  },
+  "output": {
+    "base_dir": "test/artifacts/test_outputs/electron_direction",
+    "save_best_only": true
+  }
+}

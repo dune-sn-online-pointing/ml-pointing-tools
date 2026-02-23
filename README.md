@@ -15,7 +15,7 @@ This repository hosts neural network tooling for two tasks in DUNE SN-TPS:
 - scripts/             Environment setup and helpers
 - json/                Shared/legacy configs
 - docs/                Documentation and summaries
-- test/                Lightweight monitoring checks
+- test/                End-to-end smoke tests
 
 ## Environment Setup
 
@@ -44,3 +44,15 @@ python3 electron_direction/models/train_three_plane_simple.py \
 
 For job submission and model tracking, see docs/BestModels.dat and task-specific
 condor submit files under channel_tagging/condor and electron_direction/condor.
+
+## Trainings documentation
+
+See [docs/Training.md](docs/Training.md) for concrete local training + analysis commands.
+
+## Tests
+
+The test suite runs tiny CT/ED trainings on locally generated fixtures and then executes the main analysis apps:
+
+```bash
+./test/testAllApps.sh
+```
