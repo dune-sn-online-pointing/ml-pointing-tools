@@ -13,6 +13,12 @@ if [[ "${BASH_SOURCE[0]}" != "$0" ]]; then
     _MLPT_IS_SOURCED=1
 fi
 
+# Idempotency: avoid re-initializing the environment multiple times.
+# To force a re-init, run: `MLPT_FORCE_INIT=1 source scripts/init.sh`
+if [[ -n "${INIT_DONE:-}" && "${INIT_DONE}" == "1" && -z "${MLPT_FORCE_INIT:-}" ]]; then
+    return 0
+fi
+
 # Get absolute path to the repository root
 export SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export REPO_DIR="$(cd "$SCRIPTS_DIR/.." && pwd)"
@@ -126,3 +132,5 @@ if python3 -c "import tensorflow" 2>/dev/null; then
 else
     print_warning "TensorFlow is not available"
 fi
+
+export INIT_DONE=1
