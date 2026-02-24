@@ -126,6 +126,12 @@ Each task has:
 - `condor/`: `.sub` submit files
 - `scripts/`: wrapper scripts referenced by the submit files
 
+Policy:
+
+- Keep only maintained `.sub` templates under `channel_tagging/condor/` and `electron_direction/condor/`.
+- Generate any temporary/derived submit files outside version control.
+- Keep runtime condor logs/errors/outputs untracked (except `.gitkeep`).
+
 ## Tests
 
 The `test/` folder provides end-to-end smoke tests that:

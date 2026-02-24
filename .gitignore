@@ -13,9 +13,12 @@ electron_direction/test_output/
 **/condor/logs/*
 **/condor/error/*
 **/condor/output/*
+*.sub
 !**/condor/logs/.gitkeep
 !**/condor/error/.gitkeep
 !**/condor/output/.gitkeep
+!channel_tagging/condor/*.sub
+!electron_direction/condor/*.sub
 test/artifacts/
 channel_tagging/models/v77_dario_test_*/
 electron_direction/models/volumes_local/

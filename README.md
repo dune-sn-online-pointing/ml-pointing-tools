@@ -13,7 +13,6 @@ This repository hosts neural network tooling for two tasks in DUNE SN-TPS:
 - channel_tagging/lib/ Task-specific CT data loaders
 - electron_direction/lib/ Task-specific ED data loaders
 - scripts/             Environment setup and helpers
-- json/                Shared/legacy configs
 - docs/                Documentation and summaries
 - test/                End-to-end smoke tests
 
@@ -44,6 +43,9 @@ python3 electron_direction/models/train_three_plane_simple.py \
 
 For job submission and model tracking, see docs/BestModels.dat and task-specific
 condor submit files under channel_tagging/condor and electron_direction/condor.
+
+Repository hygiene policy: keep only hand-maintained `.sub` templates in task
+`condor/` folders. Generated submit files should stay untracked.
 
 ## Trainings documentation
 
