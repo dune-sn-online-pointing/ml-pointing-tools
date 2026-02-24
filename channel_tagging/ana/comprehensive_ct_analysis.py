@@ -207,9 +207,15 @@ def plot_confusion_matrix(predictions, results, fig):
     # Plot 1: Confusion matrix
     ax1 = fig.add_subplot(gs[0, 0])
     
-    # Normalize by row (true labels)
-    cm_norm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
-    cm_norm = np.nan_to_num(cm_norm)
+    # Normalize by row (true labels). Handle missing classes gracefully.
+    row_sums = cm.sum(axis=1, keepdims=True)
+    with np.errstate(divide='ignore', invalid='ignore'):
+        cm_norm = np.divide(
+            cm.astype(float),
+            row_sums,
+            out=np.zeros_like(cm, dtype=float),
+            where=row_sums != 0,
+        )
     
     im = ax1.imshow(cm_norm, interpolation='nearest', cmap='Blues', vmin=0, vmax=1)
     cbar = ax1.figure.colorbar(im, ax=ax1)
@@ -240,7 +246,7 @@ def plot_confusion_matrix(predictions, results, fig):
     ax2 = fig.add_subplot(gs[0, 1])
     ax2.axis('off')
     
-    total = len(y_true)
+    total = int(len(y_true))
     
     metrics_text = f"""OVERALL METRICS
 
@@ -256,8 +262,9 @@ Class Distribution:"""
     
     # Add class counts
     for i in range(n_classes):
-        count = metrics['support'][i]
-        pct = 100 * count / total
+        # `support` may come back as numpy types; ensure it is an int for formatting.
+        count = int(metrics['support'][i])
+        pct = (100.0 * count / total) if total > 0 else 0.0
         label = CHANNEL_LABELS.get(i, f'C{i}')
         metrics_text += f"\n  {label:12s}: {count:5d} ({pct:4.1f}%)"
     

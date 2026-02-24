@@ -3,7 +3,15 @@
 # Sets up environment, paths, and helper functions
 # Source this script from other scripts: source $SCRIPTS_DIR/init.sh
 
-set -e
+# NOTE:
+# This file is intended to be *sourced* (often into an interactive shell).
+# Do not enable `set -e` (errexit) here: it can cause interactive shells to
+# exit unexpectedly (notably during bash tab-completion).
+
+_MLPT_IS_SOURCED=0
+if [[ "${BASH_SOURCE[0]}" != "$0" ]]; then
+    _MLPT_IS_SOURCED=1
+fi
 
 # Get absolute path to the repository root
 export SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -45,11 +53,11 @@ else
 fi
 
 # Add task-specific libs and shared Python modules to PYTHONPATH
-export PYTHONPATH="$CT_LIB_DIR:$ED_LIB_DIR:$PYTHON_DIR:$PYTHONPATH"
+export PYTHONPATH="$CT_LIB_DIR:$ED_LIB_DIR:$PYTHON_DIR:${PYTHONPATH:-}"
 
 # Add local packages to PYTHONPATH (for healpy, hyperopt if needed)
 if [ -d "$LOCAL_PACKAGES_DIR/lib/python3.11/site-packages" ]; then
-    export PYTHONPATH="$LOCAL_PACKAGES_DIR/lib/python3.11/site-packages:$PYTHONPATH"
+    export PYTHONPATH="$LOCAL_PACKAGES_DIR/lib/python3.11/site-packages:${PYTHONPATH:-}"
     echo "✓ Added local packages to PYTHONPATH"
 fi
 
@@ -70,19 +78,25 @@ print_error() {
     echo -e "\033[0;31m[ERROR]\033[0m $1"
 }
 
+_mlpt_die() {
+    print_error "$1"
+    if [[ "${_MLPT_IS_SOURCED}" -eq 1 ]]; then
+        return 1
+    fi
+    exit 1
+}
+
 # Helper function to check if a file exists
 check_file() {
     if [ ! -f "$1" ]; then
-        print_error "File not found: $1"
-        exit 1
+        _mlpt_die "File not found: $1"
     fi
 }
 
 # Helper function to check if a directory exists
 check_dir() {
     if [ ! -d "$1" ]; then
-        print_error "Directory not found: $1"
-        exit 1
+        _mlpt_die "Directory not found: $1"
     fi
 }
 
