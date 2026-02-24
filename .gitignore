@@ -19,6 +19,18 @@ electron_direction/test_output/
 !**/condor/output/.gitkeep
 !channel_tagging/condor/*.sub
 !electron_direction/condor/*.sub
+
+# Legacy submit/config variants kept local (do not track)
+channel_tagging/condor/submit_ct_v4_balanced_10k.sub
+electron_direction/condor/submit_3plane_v14_10k_hyperopt.sub
+electron_direction/condor/submit_v26.sub
+electron_direction/condor/submit_v52.sub
+electron_direction/condor/submit_v60_200k.sub
+channel_tagging/json/volume_v4_balanced_10k.json
+electron_direction/json/three_plane_v14_10k_hyperopt.json
+electron_direction/json/three_plane_v26_50k_corrected.json
+electron_direction/json/v52.json
+electron_direction/json/v60_200k_es_cc.json
 test/artifacts/
 channel_tagging/models/v77_dario_test_*/
 electron_direction/models/volumes_local/
