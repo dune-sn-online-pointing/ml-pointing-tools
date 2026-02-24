@@ -1,12 +1,10 @@
 #!/bin/bash
-# Initialization script for ML for Pointing
+
+# Initialization script for the repo
 # Sets up environment, paths, and helper functions
 # Source this script from other scripts: source $SCRIPTS_DIR/init.sh
-
-# NOTE:
 # This file is intended to be *sourced* (often into an interactive shell).
-# Do not enable `set -e` (errexit) here: it can cause interactive shells to
-# exit unexpectedly (notably during bash tab-completion).
+# All scripts source it automatically
 
 _MLPT_IS_SOURCED=0
 if [[ "${BASH_SOURCE[0]}" != "$0" ]]; then
