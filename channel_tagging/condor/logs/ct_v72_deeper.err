@@ -1,8 +1,0 @@
-2025-11-18 16:14:54.567339: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
-2025-11-18 16:14:56.670234: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
-To enable the following instructions: AVX2 AVX512F AVX512_VNNI AVX512_BF16 AVX512_FP16 AVX_VNNI AMX_TILE AMX_INT8 AMX_BF16 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
-usage: train_ct_volume_batch_reload.py [-h] [--plane {U,V,X}]
-                                       [--max-samples MAX_SAMPLES] --json JSON
-                                       [--reload-epochs RELOAD_EPOCHS]
-                                       [--test-local]
-train_ct_volume_batch_reload.py: error: the following arguments are required: --json/-j

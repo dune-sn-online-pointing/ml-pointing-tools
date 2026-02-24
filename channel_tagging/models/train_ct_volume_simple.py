@@ -307,11 +307,15 @@ def main():
     y_true = y_test
     
     # Save predictions
+    # Keep legacy keys (y_true/y_pred/y_prob) and also add the keys expected by
+    # the CT analysis tools (true_labels/predictions).
     np.savez(
         os.path.join(output_dir, 'test_predictions.npz'),
         y_true=y_true,
         y_pred=y_pred,
-        y_prob=y_pred_probs
+        y_prob=y_pred_probs,
+        true_labels=y_true,
+        predictions=y_pred_probs,
     )
     
     # Generate confusion matrix

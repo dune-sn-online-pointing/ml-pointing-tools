@@ -1,8 +1,0 @@
-===========================================
-Job started at: Sun Nov 16 03:36:14 AM CET 2025
-Running on host: b9g47n3159.cern.ch
-Current directory: /pool/condor/dir_2535545
-===========================================
-Setting up larsoft UPS area... /cvmfs/larsoft.opensciencegrid.org
-Setting up DUNE UPS area... /cvmfs/dune.opensciencegrid.org/products/dune/
-Error: JSON config file required (-j)

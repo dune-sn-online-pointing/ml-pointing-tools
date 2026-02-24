@@ -31,8 +31,6 @@ def validate_config(config_path):
     required_sections = []
     if 'channel_tagging' in config_path:
         required_sections = ['model', 'data', 'training']
-    elif 'mt_identifier' in config_path:
-        required_sections = ['model_name', 'data_directories', 'dataset_parameters', 'model_parameters']
     elif 'electron_direction' in config_path:
         required_sections = ['model', 'data', 'training', 'output']
     

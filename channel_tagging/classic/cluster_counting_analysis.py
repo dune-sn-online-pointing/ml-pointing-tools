@@ -101,7 +101,7 @@ def main():
     es_dir = Path("/eos/user/e/evilla/dune/sn-tps/prod_es/es_production_matched_clusters_tick3_ch2_min2_tot3_e2p0")
     cc_dir = Path("/eos/user/e/evilla/dune/sn-tps/prod_cc/cc_production_matched_clusters_tick3_ch2_min2_tot3_e2p0")
     
-    output_dir = Path("/afs/cern.ch/work/e/evilla/private/dune/refactor_ml/channel_tagging/classic")
+    output_dir = Path("/afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/channel_tagging/classic")
     output_dir.mkdir(parents=True, exist_ok=True)
     
     # Get files (100 per class for better statistics)

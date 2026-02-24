@@ -11,8 +11,9 @@ import json
 import argparse
 from datetime import datetime
 
-# Add python libs to path
+# Add shared libs and CT-specific libs to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'python'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'lib'))
 
 import numpy as np
 import tensorflow as tf

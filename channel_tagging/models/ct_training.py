@@ -26,7 +26,8 @@ except Exception:
     hp = None
 
 # Ensure local python package directory is on the path, then import project libs
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'python'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'python'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lib'))
 
 import general_purpose_libs as gpl
 import classification_libs as cl
@@ -119,7 +120,7 @@ def setup_output_directory(config, args):
     
     # Add model name subdirectory
     model_name = config['model_name']
-    output_folder = os.path.join(base_output, 'mt_identifier', model_name)
+    output_folder = os.path.join(base_output, 'channel_tagging', model_name)
     
     # Add augmentation coefficient to path if > 1
     aug_coeff = config['dataset_parameters'].get('aug_coefficient', 1)
@@ -229,8 +230,6 @@ def main():
         print("\n" + "="*70)
         print("USING STREAMING DATA LOADER (generator-based)")
         print("="*70)
-        import sys
-        sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'python'))
         import streaming_data_loader as sdl
         
         preprocessing_config = config.get('preprocessing', None)

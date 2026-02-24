@@ -1,9 +1,9 @@
 # HTCondor submit file for v60 (200k ES+CC samples)
-executable = wrapper_v55.sh
-arguments = -j json/v60_200k_es_cc.json
-output = logs/ed_v60_200k_es_cc_$(ClusterId).out
-error = logs/ed_v60_200k_es_cc_$(ClusterId).err
-log = logs/ed_v60_200k_es_cc_$(ClusterId).log
+executable = electron_direction/scripts/wrapper_v55.sh
+arguments = -j electron_direction/json/v60_200k_es_cc.json
+output = electron_direction/condor/logs/ed_v60_200k_es_cc_$(ClusterId).out
+error = electron_direction/condor/logs/ed_v60_200k_es_cc_$(ClusterId).err
+log = electron_direction/condor/logs/ed_v60_200k_es_cc_$(ClusterId).log
 
 request_GPUs = 1
 request_CPUs = 4

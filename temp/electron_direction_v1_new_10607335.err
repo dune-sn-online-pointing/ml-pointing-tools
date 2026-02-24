@@ -1,8 +1,0 @@
-2025-11-05 15:27:52.103619: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
-To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
-Traceback (most recent call last):
-  File "/afs/cern.ch/work/e/evilla/private/dune/ml_for_pointing/electron_direction/ed_training.py", line 33, in <module>
-    import regression_libs as rl
-  File "/afs/cern.ch/work/e/evilla/private/dune/ml_for_pointing/electron_direction/../python/regression_libs.py", line 7, in <module>
-    import hyperopt as hp
-ModuleNotFoundError: No module named 'hyperopt'

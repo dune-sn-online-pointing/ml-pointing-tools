@@ -89,6 +89,33 @@ def load_results(results_dir):
         predictions = np.load(pred_path_alt, allow_pickle=True)
     else:
         predictions = None
+
+    # Normalize prediction file schemas across different trainers.
+    # Expected by downstream plots:
+    #   - predictions['predictions'] : (N, n_classes) probabilities
+    #   - predictions['true_labels'] : (N,) integer labels
+    if predictions is not None:
+        keys = set(predictions.files) if hasattr(predictions, "files") else set(predictions.keys())
+
+        # Legacy CT volume trainer format
+        if 'predictions' not in keys and 'y_prob' in keys:
+            prob = predictions['y_prob']
+            pred_dict = {k: predictions[k] for k in keys}
+            pred_dict['predictions'] = prob
+            predictions = pred_dict
+            keys = set(pred_dict.keys())
+
+        if 'true_labels' not in keys:
+            if 'y_true' in keys:
+                pred_dict = dict(predictions)
+                pred_dict['true_labels'] = pred_dict['y_true']
+                predictions = pred_dict
+                keys = set(pred_dict.keys())
+            elif 'true_labels' not in keys and 'true' in keys:
+                pred_dict = dict(predictions)
+                pred_dict['true_labels'] = pred_dict['true']
+                predictions = pred_dict
+                keys = set(pred_dict.keys())
     
     # Convert binary predictions to 2-class format if needed
     if predictions is not None and 'predictions' in predictions:
@@ -180,9 +207,15 @@ def plot_confusion_matrix(predictions, results, fig):
     # Plot 1: Confusion matrix
     ax1 = fig.add_subplot(gs[0, 0])
     
-    # Normalize by row (true labels)
-    cm_norm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
-    cm_norm = np.nan_to_num(cm_norm)
+    # Normalize by row (true labels). Handle missing classes gracefully.
+    row_sums = cm.sum(axis=1, keepdims=True)
+    with np.errstate(divide='ignore', invalid='ignore'):
+        cm_norm = np.divide(
+            cm.astype(float),
+            row_sums,
+            out=np.zeros_like(cm, dtype=float),
+            where=row_sums != 0,
+        )
     
     im = ax1.imshow(cm_norm, interpolation='nearest', cmap='Blues', vmin=0, vmax=1)
     cbar = ax1.figure.colorbar(im, ax=ax1)
@@ -213,7 +246,7 @@ def plot_confusion_matrix(predictions, results, fig):
     ax2 = fig.add_subplot(gs[0, 1])
     ax2.axis('off')
     
-    total = len(y_true)
+    total = int(len(y_true))
     
     metrics_text = f"""OVERALL METRICS
 
@@ -229,8 +262,9 @@ Class Distribution:"""
     
     # Add class counts
     for i in range(n_classes):
-        count = metrics['support'][i]
-        pct = 100 * count / total
+        # `support` may come back as numpy types; ensure it is an int for formatting.
+        count = int(metrics['support'][i])
+        pct = (100.0 * count / total) if total > 0 else 0.0
         label = CHANNEL_LABELS.get(i, f'C{i}')
         metrics_text += f"\n  {label:12s}: {count:5d} ({pct:4.1f}%)"
     
@@ -577,6 +611,190 @@ def plot_prediction_distribution(predictions, fig):
     ax3.legend(lines, labels_leg, fontsize=10)
 
 
+
+
+def plot_confusion_matrices_thresholds(predictions, fig):
+    """Page with confusion matrices at different confidence thresholds."""
+    y_true = predictions['true_labels'].astype(int)
+    y_prob = predictions['predictions']
+    y_pred = y_prob.argmax(axis=1)
+    
+    n_classes = y_prob.shape[1]
+    labels = [CHANNEL_LABELS.get(i, f'C{i}') for i in range(n_classes)]
+    
+    # Define thresholds to test
+    thresholds = [0.6, 0.7, 0.8, 0.9]
+    
+    # Create 2x2 subplot grid
+    gs = gridspec.GridSpec(2, 2, figure=fig, hspace=0.35, wspace=0.3)
+    
+    for idx, threshold in enumerate(thresholds):
+        ax = fig.add_subplot(gs[idx // 2, idx % 2])
+        
+        # Apply threshold
+        max_probs = y_prob.max(axis=1)
+        mask = max_probs >= threshold
+        
+        # Filter predictions
+        y_true_filt = y_true[mask]
+        y_pred_filt = y_pred[mask]
+        
+        if len(y_true_filt) == 0:
+            ax.text(0.5, 0.5, f'No samples above threshold {threshold}',
+                   ha='center', va='center', transform=ax.transAxes,
+                   fontsize=12, fontweight='bold')
+            continue
+        
+        # Calculate confusion matrix
+        from sklearn.metrics import confusion_matrix, accuracy_score
+        cm = confusion_matrix(y_true_filt, y_pred_filt, labels=range(n_classes))
+        cm_norm = cm.astype('float') / (cm.sum(axis=1)[:, np.newaxis] + 1e-10)
+        cm_norm = np.nan_to_num(cm_norm)
+        
+        # Plot confusion matrix
+        im = ax.imshow(cm_norm, interpolation='nearest', cmap='Blues', vmin=0, vmax=1)
+        
+        # Add percentage annotations
+        thresh_color = cm_norm.max() / 2.
+        for i in range(n_classes):
+            for j in range(n_classes):
+                color = "white" if cm_norm[i, j] > thresh_color else "black"
+                text = f'{cm_norm[i, j]:.1%}'
+                ax.text(j, i, text, ha="center", va="center",
+                       color=color, fontsize=9 if n_classes > 3 else 11, fontweight='bold')
+        
+        # Labels
+        ax.set_xticks(range(n_classes))
+        ax.set_yticks(range(n_classes))
+        ax.set_xticklabels(labels, rotation=45, ha='right', fontsize=8 if n_classes > 3 else 9)
+        ax.set_yticklabels(labels, fontsize=8 if n_classes > 3 else 9)
+        ax.set_xlabel('Predicted Label', fontsize=10, fontweight='bold')
+        ax.set_ylabel('True Label', fontsize=10, fontweight='bold')
+        
+        # Calculate metrics
+        acc = accuracy_score(y_true_filt, y_pred_filt)
+        kept_pct = 100 * mask.sum() / len(mask)
+        n_samples = mask.sum()
+        
+        title_text = f'Threshold ≥ {threshold:.1f}\n'
+        title_text += f'Acc={acc:.1%}, N={n_samples:,} ({kept_pct:.1f}%)'
+        ax.set_title(title_text, fontsize=11, fontweight='bold')
+        
+        # Add colorbar
+        if idx % 2 == 1:  # Right column
+            cbar = plt.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
+            cbar.set_label('Recall', rotation=270, labelpad=15, fontsize=9, fontweight='bold')
+
+
+def plot_es_probability_distribution(predictions, fig):
+    """Page with ES prediction probability distribution by true label."""
+    y_true = predictions['true_labels'].astype(int)
+    y_prob = predictions['predictions']
+    
+    n_classes = y_prob.shape[1]
+    
+    # ES probabilities (class 0)
+    es_probs = y_prob[:, 0]
+    
+    # Define true class groupings
+    # For 7-class: CC = classes 1,2 (Induction, Collection), ES = class 0
+    # For 2-class: CC = class 1, ES = class 0
+    if n_classes == 2:
+        true_cc_mask = (y_true == 1)
+        true_es_mask = (y_true == 0)
+        title_suffix = "ES vs CC"
+    elif n_classes == 7:
+        true_cc_mask = np.isin(y_true, [1, 2])  # Induction + Collection
+        true_es_mask = (y_true == 0)  # ES
+        title_suffix = "ES vs CC (Ind+Col)"
+    else:
+        # Fallback: just show ES vs others
+        true_es_mask = (y_true == 0)
+        true_cc_mask = (y_true != 0)
+        title_suffix = "ES vs Others"
+    
+    # Create single large plot
+    ax = fig.add_subplot(1, 1, 1)
+    
+    # Histogram bins
+    bins = np.linspace(0, 1, 51)
+    
+    # Plot overlapping histograms
+    n_cc = true_cc_mask.sum()
+    n_es = true_es_mask.sum()
+    
+    if n_cc > 0:
+        ax.hist(es_probs[true_cc_mask], bins=bins, alpha=0.6, label=f'True CC (N={n_cc:,})', 
+                color='blue', edgecolor='darkblue', linewidth=1.5)
+    
+    if n_es > 0:
+        ax.hist(es_probs[true_es_mask], bins=bins, alpha=0.6, label=f'True ES (N={n_es:,})',
+                color='orange', edgecolor='darkorange', linewidth=1.5)
+    
+    # Add threshold lines
+    thresholds = [0.6, 0.7, 0.8, 0.9]
+    for threshold in thresholds:
+        ax.axvline(threshold, color='red', linestyle='--', linewidth=2, alpha=0.7)
+        ax.text(threshold, ax.get_ylim()[1] * 0.95, f'{threshold:.1f}',
+               ha='center', va='top', fontsize=12, fontweight='bold',
+               bbox=dict(boxstyle='round', facecolor='red', alpha=0.3))
+    
+    # Labels and formatting
+    ax.set_xlabel('ES Prediction Probability', fontsize=13, fontweight='bold')
+    ax.set_ylabel('Count', fontsize=13, fontweight='bold')
+    ax.set_title(f'Distribution of ES Prediction Probabilities: {title_suffix}',
+                fontsize=14, fontweight='bold', pad=15)
+    ax.legend(fontsize=12, loc='upper center')
+    ax.grid(True, alpha=0.3)
+    ax.set_xlim(0, 1)
+    
+    # Add statistics text box
+    if n_cc > 0:
+        mean_cc = es_probs[true_cc_mask].mean()
+        median_cc = np.median(es_probs[true_cc_mask])
+        std_cc = es_probs[true_cc_mask].std()
+    else:
+        mean_cc = median_cc = std_cc = 0
+    
+    if n_es > 0:
+        mean_es = es_probs[true_es_mask].mean()
+        median_es = np.median(es_probs[true_es_mask])
+        std_es = es_probs[true_es_mask].std()
+    else:
+        mean_es = median_es = std_es = 0
+    
+    stats_text = 'Statistics:\n\n'
+    if n_cc > 0:
+        stats_text += f'True CC:\n'
+        stats_text += f'  Mean:   {mean_cc:.3f}\n'
+        stats_text += f'  Median: {median_cc:.3f}\n'
+        stats_text += f'  Std:    {std_cc:.3f}\n\n'
+    if n_es > 0:
+        stats_text += f'True ES:\n'
+        stats_text += f'  Mean:   {mean_es:.3f}\n'
+        stats_text += f'  Median: {median_es:.3f}\n'
+        stats_text += f'  Std:    {std_es:.3f}'
+    
+    ax.text(0.02, 0.98, stats_text, transform=ax.transAxes,
+           fontsize=10, verticalalignment='top', fontfamily='monospace',
+           bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.8, pad=0.7))
+    
+    # Add separation quality metric
+    if n_cc > 0 and n_es > 0:
+        # Calculate overlap at different thresholds
+        separation_text = '\nThreshold Performance:\n'
+        for thresh in thresholds:
+            es_kept = (es_probs[true_es_mask] >= thresh).sum()
+            cc_rejected = (es_probs[true_cc_mask] < thresh).sum()
+            es_purity = es_kept / (es_kept + (es_probs[true_cc_mask] >= thresh).sum() + 1e-10)
+            separation_text += f'  ≥{thresh:.1f}: ES eff={100*es_kept/n_es:.1f}%, CC rej={100*cc_rejected/n_cc:.1f}%\n'
+        
+        ax.text(0.98, 0.98, separation_text, transform=ax.transAxes,
+               fontsize=9, verticalalignment='top', horizontalalignment='right',
+               fontfamily='monospace',
+               bbox=dict(boxstyle='round', facecolor='lightblue', alpha=0.7, pad=0.7))
+
+
 def plot_energy_analysis(predictions, fig):
     """Page 6: Performance vs energy analysis."""
     # Check if energies exist in predictions
@@ -844,7 +1062,7 @@ def generate_comprehensive_analysis(results_dir, output_pdf=None):
     # Create multi-page PDF
     with PdfPages(output_pdf) as pdf:
         # Page 1: Confusion matrix
-        print("📈 Generating page 1/7: Confusion Matrix...")
+        print("📈 Generating page 1/9: Confusion Matrix...")
         fig = plt.figure(figsize=(14, 10))
         plot_confusion_matrix(predictions, results, fig)
         fig.suptitle(f'{model_name.upper()} - Confusion Matrix', 
@@ -853,7 +1071,7 @@ def generate_comprehensive_analysis(results_dir, output_pdf=None):
         plt.close(fig)
         
         # Page 2: Per-class metrics
-        print("📈 Generating page 2/7: Per-Class Metrics...")
+        print("📈 Generating page 2/9: Per-Class Metrics...")
         fig = plt.figure(figsize=(14, 10))
         plot_per_class_metrics(predictions, fig)
         fig.suptitle(f'{model_name.upper()} - Per-Class Performance', 
@@ -862,7 +1080,7 @@ def generate_comprehensive_analysis(results_dir, output_pdf=None):
         plt.close(fig)
         
         # Page 3: ROC curves
-        print("📈 Generating page 3/7: ROC Curves...")
+        print("📈 Generating page 3/9: ROC Curves...")
         fig = plt.figure(figsize=(14, 12))
         plot_roc_curves(predictions, fig)
         fig.suptitle(f'{model_name.upper()} - ROC Curves (One-vs-Rest)', 
@@ -871,7 +1089,7 @@ def generate_comprehensive_analysis(results_dir, output_pdf=None):
         plt.close(fig)
         
         # Page 4: Training history
-        print("📈 Generating page 4/7: Training History...")
+        print("📈 Generating page 4/9: Training History...")
         fig = plt.figure(figsize=(14, 10))
         plot_training_history(results, fig)
         fig.suptitle(f'{model_name.upper()} - Training History', 
@@ -880,7 +1098,7 @@ def generate_comprehensive_analysis(results_dir, output_pdf=None):
         plt.close(fig)
         
         # Page 5: Prediction distributions
-        print("📈 Generating page 5/7: Prediction Distributions...")
+        print("📈 Generating page 5/9: Prediction Distributions...")
         fig = plt.figure(figsize=(14, 10))
         plot_prediction_distribution(predictions, fig)
         fig.suptitle(f'{model_name.upper()} - Prediction Confidence', 
@@ -888,8 +1106,26 @@ def generate_comprehensive_analysis(results_dir, output_pdf=None):
         pdf.savefig(fig, bbox_inches='tight')
         plt.close(fig)
         
-        # Page 6: Energy analysis
-        print("📈 Generating page 6/7: Energy-Dependent Performance...")
+        # Page 6: Confusion matrices at different thresholds (NEW!)
+        print("�� Generating page 6/9: Confidence Threshold Analysis...")
+        fig = plt.figure(figsize=(17, 11))
+        plot_confusion_matrices_thresholds(predictions, fig)
+        fig.suptitle(f'{model_name.upper()} - Confusion Matrices at Different Confidence Thresholds', 
+                    fontsize=16, fontweight='bold', y=0.995)
+        pdf.savefig(fig, bbox_inches='tight')
+        plt.close(fig)
+        
+        # Page 7: ES probability distribution (NEW!)
+        print("📈 Generating page 7/9: ES Probability Distribution...")
+        fig = plt.figure(figsize=(14, 10))
+        plot_es_probability_distribution(predictions, fig)
+        fig.suptitle(f'{model_name.upper()} - ES Prediction Probability Distribution', 
+                    fontsize=16, fontweight='bold', y=0.995)
+        pdf.savefig(fig, bbox_inches='tight')
+        plt.close(fig)
+        
+        # Page 8: Energy analysis
+        print("📈 Generating page 8/9: Energy-Dependent Performance...")
         fig = plt.figure(figsize=(14, 10))
         plot_energy_analysis(predictions, fig)
         fig.suptitle(f'{model_name.upper()} - Energy-Dependent Performance', 
@@ -897,8 +1133,8 @@ def generate_comprehensive_analysis(results_dir, output_pdf=None):
         pdf.savefig(fig, bbox_inches='tight')
         plt.close(fig)
         
-        # Page 7: Example predictions
-        print("📈 Generating page 7/7: Example Predictions...")
+        # Page 9: Example predictions
+        print("📈 Generating page 9/9: Example Predictions...")
         fig = plt.figure(figsize=(16, 10))
         plot_example_predictions(predictions, fig, results_dir)
         fig.suptitle(f'{model_name.upper()} - Example Predictions', 
@@ -908,7 +1144,6 @@ def generate_comprehensive_analysis(results_dir, output_pdf=None):
     
     print(f"\n✅ Analysis complete! Saved to: {output_pdf}")
     print("="*80 + "\n")
-    
     return output_pdf
 
 

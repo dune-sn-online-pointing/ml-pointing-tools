@@ -124,7 +124,7 @@ def generate_report(training_dir):
     
     if not analysis_script.exists():
         # Try alternative location
-        analysis_script = Path('/afs/cern.ch/work/e/evilla/private/dune/refactor_ml/electron_direction/ana/comprehensive_ed_analysis.py')
+        analysis_script = Path('/afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools/electron_direction/ana/comprehensive_ed_analysis.py')
     
     if not analysis_script.exists():
         print(f"❌ Cannot find comprehensive_ed_analysis.py")

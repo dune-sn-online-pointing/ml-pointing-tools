@@ -1,9 +1,0 @@
-executable            = scripts/run_three_plane_hyperopt.sh
-output                = logs/three_plane_hyperopt_v2_$(ClusterId).out
-error                 = logs/three_plane_hyperopt_v2_$(ClusterId).err
-log                   = logs/three_plane_hyperopt_v2_$(ClusterId).log
-
-+JobFlavour           = "testmatch"
-request_gpus          = 1
-
-queue
