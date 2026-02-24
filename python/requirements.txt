@@ -1,0 +1,14 @@
+# Minimal runtime dependencies for training + analysis scripts.
+# Install with: pip install -r python/requirements.txt
+
+numpy
+scipy
+scikit-learn
+pandas
+matplotlib
+seaborn
+tqdm
+
+# Training uses TensorFlow/Keras via `tensorflow`.
+# For Python 3.11, TensorFlow 2.16+ is typical.
+tensorflow>=2.16

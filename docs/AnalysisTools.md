@@ -1,64 +1,35 @@
-# Analysis Tools - Active Scripts
+# Analysis Tools
 
-## Current Analysis Workflow
+This repository currently provides the following analysis entrypoints.
 
-### Comprehensive Analysis (Primary Tools)
+All analysis scripts take a *training results directory* (i.e. the output folder created by a training run) and generate PDF summaries and/or auxiliary artifacts in that same directory.
 
-These scripts generate complete PDF reports with all metrics, plots, and insights:
+## Channel Tagging (CT)
 
-#### 1. Electron Direction Analysis
+### Comprehensive CT report
 ```bash
-python electron_direction/ana/comprehensive_ed_analysis.py <results_directory>
+python3 channel_tagging/ana/comprehensive_ct_analysis.py <results_directory> -o <output_pdf>
 ```
-**Generates**: `<model_name>_comprehensive_analysis.pdf` with:
-- Angular error analysis (mean, median, quantiles)
-- Training history
-- Component correlations (x, y, z predictions)
-- Energy-dependent performance
-- Cosine similarity analysis
-- Best/worst predictions
-- Error vs true angle scatter plots
 
-**Also generates**:
-- `cosine_energy_pdf.npz`: 2D histogram (energy bins × cosine bins)
-- `cosine_energy_pdf_visualization.png`: Heatmap visualization
+Produces a PDF summary of classification performance (confusion matrix, per-class metrics, ROC curves, training history, and basic energy-dependent plots when available).
 
-#### 2. Channel Tagging Analysis
+## Electron Direction (ED)
+
+### Comprehensive ED report
 ```bash
-python channel_tagging/ana/comprehensive_ct_analysis.py <results_directory>
-```
-**Generates**: `<model_name>_comprehensive_analysis.pdf` with:
-- Classification metrics per class
-- Confusion matrices
-- Training history
-- Prediction distributions per class
-- Energy-dependent performance
-- Volume integration analysis (if applicable)
-
-## Obsolete Scripts
-
-All previous analysis scripts have been moved to `temp/obsolete_analysis/` and should not be used for new work.
-
----
-
-## Best Practices
-
-1. **Run comprehensive analysis after every training run** to generate the full PDF report
-2. **Open PDFs in VS Code** for easy viewing: `code <path_to_pdf>`
-3. **Include PDF reports in any results discussion** - they contain all necessary metrics
-4. **Use cosine_energy_pdf.npz** for physics-level ED performance analysis
-5. **Check `results.json`** for programmatic access to all metrics and history
-
----
-
-## Active Analysis Files by Task
-
-```
-channel_tagging/ana/
-└── comprehensive_ct_analysis.py          # ✅ Active
-
-electron_direction/ana/
-└── comprehensive_ed_analysis.py          # ✅ Active
+python3 electron_direction/ana/comprehensive_ed_analysis.py <results_directory> -o <output_pdf>
 ```
 
-Total: **2 active analysis scripts** (down from 22 scripts)
+Produces a PDF summary of regression performance (angular error, cosine similarity, training history, correlations, and energy-dependent performance).
+
+Also writes:
+
+- `cosine_energy_pdf.npz`
+- `cosine_energy_pdf_visualization.png`
+
+### ED interpretation report
+```bash
+python3 electron_direction/ana/cnn_feature_interpretation.py <results_directory> -o <output_pdf>
+```
+
+Produces a PDF report with additional diagnostic plots and summaries derived from the stored validation predictions.

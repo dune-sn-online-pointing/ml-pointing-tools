@@ -1,58 +1,65 @@
 # Machine Learning for Fast Online Supernova Pointing
 
-This repository hosts neural network tooling for two tasks in DUNE SN-TPS:
+This repository contains neural-network tooling for two DUNE SN-TPS tasks:
 
-- Channel Tagging (CT): classify interaction type (ES/CC/NC)
-- Electron Direction (ED): regress electron direction
+- **Channel Tagging (CT)**: interaction-type classification (e.g. ES vs CC)
+- **Electron Direction (ED)**: electron direction regression (3-vector)
 
-## Repository Structure
+## Core Concepts
 
-- channel_tagging/     CT training, configs, analysis, condor
-- electron_direction/  ED training, configs, analysis, condor
-- python/              Shared utilities (common across tasks)
-- channel_tagging/lib/ Task-specific CT data loaders
-- electron_direction/lib/ Task-specific ED data loaders
-- scripts/             Environment setup and helpers
-- json/                Shared/legacy configs
-- docs/                Documentation and summaries
-- test/                End-to-end smoke tests
+- **Config-driven runs**: training entrypoints take a JSON config describing data locations, model parameters, and output settings.
+- **Standardized outputs**: training produces a *results directory* containing metrics (e.g. `results.json`), predictions (`*.npz`), and training history (`*.csv`).
+- **PDF reports**: analysis entrypoints consume a results directory and generate a compact PDF summary of performance.
 
-## Environment Setup
+## Setup
 
-Most scripts expect the standard environment from scripts/init.sh:
+If you are using the CERN LCG environment, the standard setup is:
 
 ```bash
 source scripts/init.sh
 ```
 
-This sets PYTHONPATH and points to the LCG CUDA stack when available.
-
-## Quick Start
-
-Channel Tagging (local run):
+For a pip-based setup, install the Python dependencies from:
 
 ```bash
-./channel_tagging/scripts/run_channel_tagging.sh -j channel_tagging/json/volume_v42_corrected_100k.json
+pip install -r python/requirements.txt
 ```
 
-Electron Direction (local run):
+## Channel Tagging (CT)
+
+**Training** (example entrypoint):
 
 ```bash
-python3 electron_direction/models/train_three_plane_simple.py \
-  -j electron_direction/json/three_plane_v50_10k.json
+python3 channel_tagging/models/train_ct_volume_simple.py --json <ct_config.json> --plane X
 ```
 
-For job submission and model tracking, see docs/BestModels.dat and task-specific
-condor submit files under channel_tagging/condor and electron_direction/condor.
+**Analysis** (PDF report):
 
-## Trainings documentation
+```bash
+python3 channel_tagging/ana/comprehensive_ct_analysis.py <results_directory> -o <output_pdf>
+```
 
-See [docs/Training.md](docs/Training.md) for concrete local training + analysis commands.
+## Electron Direction (ED)
+
+**Training** (example entrypoint):
+
+```bash
+python3 electron_direction/models/train_three_plane_simple.py --json <ed_config.json>
+```
+
+**Analysis** (PDF reports):
+
+```bash
+python3 electron_direction/ana/comprehensive_ed_analysis.py <results_directory> -o <output_pdf>
+python3 electron_direction/ana/cnn_feature_interpretation.py <results_directory> -o <output_pdf>
+```
 
 ## Tests
 
-The test suite runs tiny CT/ED trainings on locally generated fixtures and then executes the main analysis apps:
+End-to-end smoke tests generate tiny local fixtures, run tiny CT/ED trainings, and then execute the main analysis apps:
 
 ```bash
-./test/testAllApps.sh
+bash test/testAllApps.sh
 ```
+
+Additional documentation lives under [docs/](docs/).
