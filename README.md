@@ -1,9 +1,9 @@
 # Machine Learning for Fast Online Supernova Pointing
 
-This repository contains neural-network tooling for two DUNE SN-TPS tasks:
+This repository contains neural-network tooling for two DUNE SN Online Pointing tasks:
 
-- **Channel Tagging (CT)**: interaction-type classification (e.g. ES vs CC)
-- **Electron Direction (ED)**: electron direction regression (3-vector)
+- **Channel Tagging (CT)**: interaction-type classification (ES vs CC)
+- **Electron Direction (ED)**: electron direction regression
 
 ## Core Concepts
 
@@ -16,14 +16,16 @@ This repository contains neural-network tooling for two DUNE SN-TPS tasks:
 If you are using the CERN LCG environment, the standard setup is:
 
 ```bash
-source scripts/init.sh
+    source scripts/init.sh
 ```
 
 For a pip-based setup, install the Python dependencies from:
 
 ```bash
-pip install -r python/requirements.txt
+    pip install -r python/requirements.txt --target ./local_packages
 ```
+
+Installing under local_packages will allow to include these libraries in the PYTHONPATH through `scripts/init.sh`.
 
 ## Channel Tagging (CT)
 
@@ -47,7 +49,7 @@ python3 channel_tagging/ana/comprehensive_ct_analysis.py <results_directory> -o 
 python3 electron_direction/models/train_three_plane_simple.py --json <ed_config.json>
 ```
 
-**Analysis** (PDF reports):
+**Analysis** (PDF report):
 
 ```bash
 python3 electron_direction/ana/comprehensive_ed_analysis.py <results_directory> -o <output_pdf>

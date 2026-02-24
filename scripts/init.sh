@@ -20,10 +20,6 @@ export LOCAL_PACKAGES_DIR="$REPO_DIR/local_packages"
 # JSON configurations directory
 export JSON_DIR="$REPO_DIR/json"
 
-# Data directories
-export DATA_DIR="/eos/home-e/evilla/dune/sn-tps/images_test"
-export OUTPUT_DIR="/eos/user/e/evilla/dune/sn-tps/neural_networks"
-
 # Source LCG environment with CUDA support
 LCG_RELEASE="LCG_106_cuda/x86_64-el9-gcc11-opt"
 LCG_VIEW="/cvmfs/sft.cern.ch/lcg/views/$LCG_RELEASE"
@@ -104,8 +100,6 @@ print_info "Repository: $REPO_DIR"
 print_info "CT libs: $CT_LIB_DIR"
 print_info "ED libs: $ED_LIB_DIR"
 print_info "Python modules: $PYTHON_DIR"
-print_info "Data directory: $DATA_DIR"
-print_info "Output directory: $OUTPUT_DIR"
 
 # Check Python version
 PYTHON_VERSION=$(python3 --version 2>&1 | awk '{print $2}')
