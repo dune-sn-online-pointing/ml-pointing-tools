@@ -1,20 +1,13 @@
 # Best Performing Neural Network Models
-# Updated: November 15, 2025
+# Updated: February 25, 2026
 
-Task               | Version  | Performance Metric                | Model Path
------------------- | -------- | --------------------------------- | ----------------------------------------------------------
-Electron Direction | v14      | 25° @ 68% quantile               | /eos/user/e/evilla/dune/sn-tps/neural_networks/electron_direction/three_plane_v14_10k_hyperopt_20251111_175141/
-Channel Tagging    | v42      | 67.1% train, 65.3% val accuracy  | /eos/user/e/evilla/dune/sn-tps/neural_networks/channel_tagging/v42_corrected_100k/20251114_213453/
+Task               | Version    | Performance Metric              | Model Path
+------------------ | ---------- | ------------------------------- | ----------------------------------------------------------
+Electron Direction | v57        | best val loss: 0.8748           | /eos/project-e/ep-nu/evilla/sn-online-pointing/neural-networks/electron_direction/three_plane_three_plane_v57_reproduce_v14_100k_20251118_110125/checkpoints/model_epoch_28_val_loss_0.8748.keras
+Channel Tagging    | v52        | test loss: 0.5653               | /eos/project-e/ep-nu/evilla/sn-online-pointing/neural-networks/channel_tagging/ct_volume_v52_batch_reload_20251116_101125
 
 ## Notes
 
-- **ED v14**: Three-plane input, 10k samples
-  - Hyperparameter optimization performed
-  - Performance: 25° @ 68% quantile on validation set
-  - Status: Satisfactory for current needs
-  
-- **CT v42**: 100k balanced samples (50k per class), corrected data
-  - 4 conv layers, 64 filters, batch norm
-  - 49 epochs trained, stopped at validation plateau
-  - Performance: 67.1% train / 65.3% validation accuracy  
-  - Status: Needs deeper architecture or more data for improvement
+- **ED best available**: lowest validation loss from checkpoint filenames in project-e.
+  - No results.json files were present; val_loss parsed from checkpoint names.
+- **CT best available**: lowest test loss in current EOS runs.
