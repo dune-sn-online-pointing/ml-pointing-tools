@@ -1,0 +1,48 @@
+{
+  "version": "v79",
+  "description": "CT v79 retrain on neighbour-APA volume samples (tick3_ch2_min2_tot3_e2p0)",
+  "notes": "Input sample includes neighbour APA clusters and stores particle energy in metadata.",
+  "model": {
+    "name": "ct_volume_v79",
+    "architecture": "batch_reload",
+    "filter_list": [28, 28, 29, 47, 48, 48],
+    "kernel_sizes": [3, 3, 3, 3, 3, 3],
+    "dropout_rate": 0.3,
+    "dense_units": [96, 32]
+  },
+  "data": {
+    "es_directory": "/eos/user/e/evilla/dune/sn-tps/prod_es/neighbourAPA_es_bg_volume_images_tick3_ch2_min2_tot3_e2p0/X",
+    "cc_directory": "/eos/user/e/evilla/dune/sn-tps/prod_cc/neighbourAPA_cc_bg_volume_images_tick3_ch2_min2_tot3_e2p0/X",
+    "plane": "X",
+    "max_samples_per_class": 10000,
+    "train_split": 0.7,
+    "val_split": 0.15,
+    "shuffle": true
+  },
+  "training": {
+    "epochs": 50,
+    "batch_size": 32,
+    "learning_rate": 0.001,
+    "reload_every_n_epochs": 5
+  },
+  "output": {
+    "base_dir": "/eos/home-e/evilla/dune/sn-tps/neural-networks/channel_tagging/",
+    "save_best_only": true
+  },
+  "model_name": "ct_volume_v79",
+  "output_folder": "/eos/home-e/evilla/dune/sn-tps/neural-networks/channel_tagging",
+  "es_directory": "/eos/user/e/evilla/dune/sn-tps/prod_es/neighbourAPA_es_bg_volume_images_tick3_ch2_min2_tot3_e2p0/X",
+  "cc_directory": "/eos/user/e/evilla/dune/sn-tps/prod_cc/neighbourAPA_cc_bg_volume_images_tick3_ch2_min2_tot3_e2p0/X",
+  "task_label": "channel_tagging_volume",
+  "plane": "X",
+  "max_samples_per_class": 10000,
+  "epochs": 50,
+  "batch_size": 32,
+  "learning_rate": 0.001,
+  "model_parameters": {
+    "filter_list": [28, 28, 29, 47, 48, 48],
+    "kernel_sizes": [3, 3, 3, 3, 3, 3],
+    "dropout_rate": 0.3,
+    "dense_units": [96, 32]
+  }
+}

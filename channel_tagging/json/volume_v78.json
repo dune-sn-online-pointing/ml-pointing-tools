@@ -1,0 +1,48 @@
+{
+  "version": "v78",
+  "description": "CT v78 retrain on e2p0 prod samples (volume images include neighbour APAs)",
+  "notes": "Input sample uses production volume images that include neighbour APAs.",
+  "model": {
+    "name": "ct_volume_v78",
+    "architecture": "batch_reload",
+    "filter_list": [28, 28, 29, 47, 48, 48],
+    "kernel_sizes": [3, 3, 3, 3, 3, 3],
+    "dropout_rate": 0.3,
+    "dense_units": [96, 32]
+  },
+  "data": {
+    "es_directory": "/eos/home-e/evilla/dune/sn-tps/prod_es/es_production_volume_images_tick3_ch2_min2_tot3_e2p0",
+    "cc_directory": "/eos/home-e/evilla/dune/sn-tps/prod_cc/cc_production_volume_images_tick3_ch2_min2_tot3_e2p0",
+    "plane": "X",
+    "max_samples_per_class": 10000,
+    "train_split": 0.7,
+    "val_split": 0.15,
+    "shuffle": true
+  },
+  "training": {
+    "epochs": 50,
+    "batch_size": 32,
+    "learning_rate": 0.001,
+    "reload_every_n_epochs": 5
+  },
+  "output": {
+    "base_dir": "/eos/home-e/evilla/dune/sn-tps/neural-networks/channel_tagging/",
+    "save_best_only": true
+  },
+  "model_name": "ct_volume_v78",
+  "output_folder": "/eos/home-e/evilla/dune/sn-tps/neural-networks/channel_tagging",
+  "es_directory": "/eos/home-e/evilla/dune/sn-tps/prod_es/es_production_volume_images_tick3_ch2_min2_tot3_e2p0",
+  "cc_directory": "/eos/home-e/evilla/dune/sn-tps/prod_cc/cc_production_volume_images_tick3_ch2_min2_tot3_e2p0",
+  "task_label": "channel_tagging_volume",
+  "plane": "X",
+  "max_samples_per_class": 10000,
+  "epochs": 50,
+  "batch_size": 32,
+  "learning_rate": 0.001,
+  "model_parameters": {
+    "filter_list": [28, 28, 29, 47, 48, 48],
+    "kernel_sizes": [3, 3, 3, 3, 3, 3],
+    "dropout_rate": 0.3,
+    "dense_units": [96, 32]
+  }
+}

@@ -3,7 +3,7 @@
 
 Task               | Version    | Performance Metric              | Model Path
 ------------------ | ---------- | ------------------------------- | ----------------------------------------------------------
-Electron Direction | v57        | best val loss: 0.8748           | /eos/project-e/ep-nu/evilla/sn-online-pointing/neural-networks/electron_direction/three_plane_three_plane_v57_reproduce_v14_100k_20251118_110125/checkpoints/model_epoch_28_val_loss_0.8748.keras
+Electron Direction | v57        | best val loss: 0.8748           | /eos/home-e/evilla/dune/sn-tps/neural_networks/electron_direction/three_plane_three_plane_v57_reproduce_v14_100k_20251118_110125/checkpoints/model_epoch_28_val_loss_0.8748.keras
 Channel Tagging    | v52        | test loss: 0.5653               | /eos/project-e/ep-nu/evilla/sn-online-pointing/neural-networks/channel_tagging/ct_volume_v52_batch_reload_20251116_101125
 
 ## Notes

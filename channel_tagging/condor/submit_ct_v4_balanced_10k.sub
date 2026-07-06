@@ -9,9 +9,11 @@ output = channel_tagging/condor/logs/CT_v4_balanced_10k_$(ClusterId).out
 error = channel_tagging/condor/logs/CT_v4_balanced_10k_$(ClusterId).err
 log = channel_tagging/condor/logs/CT_v4_balanced_10k_$(ClusterId).log
 
-# Resource requirements (increased memory to avoid OOM)
+# Resource requirements
+# Recommendation: request_memory = 120GB for CT volume trainings to avoid OOM holds.
+# This generally does not impact queue time significantly for our typical submissions.
 request_cpus = 1
-request_memory = 40GB
+request_memory = 120GB
 request_gpus = 1
 +Requirements = OpSysAndVer =?= "AlmaLinux9"
 

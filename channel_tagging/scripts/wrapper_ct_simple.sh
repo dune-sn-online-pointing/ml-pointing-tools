@@ -32,8 +32,16 @@ echo "Running on host: $(hostname)"
 echo "JSON config: $JSON_CONFIG"
 echo "========================================="
 
-# Navigate to project directory
-PROJECT_DIR="/afs/cern.ch/work/e/evilla/private/dune/ml-pointing-tools"
+# Navigate to project directory.
+# Prefer deriving from the JSON config absolute path: <repo>/channel_tagging/json/*.json
+if [[ -f "$JSON_CONFIG" ]]; then
+    PROJECT_DIR="$(cd "$(dirname "$JSON_CONFIG")/../.." && pwd)"
+elif [[ -n "${_CONDOR_JOB_IWD:-}" ]] && [[ -f "${_CONDOR_JOB_IWD}/scripts/init.sh" ]]; then
+    PROJECT_DIR="$_CONDOR_JOB_IWD"
+else
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    PROJECT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+fi
 cd "$PROJECT_DIR"
 
 # Setup environment using init.sh
@@ -55,10 +63,10 @@ echo "PYTHONPATH: $PYTHONPATH"
 echo ""
 
 echo "Starting training..."
-echo "Command: python3 channel_tagging/models/train_ct_volume_simple.py -j $JSON_CONFIG"
+echo "Command: python3 channel_tagging/models/train_ct_volume_batch_reload.py -j $JSON_CONFIG"
 echo ""
 
-python3 channel_tagging/models/train_ct_volume_simple.py -j "$JSON_CONFIG"
+python3 channel_tagging/models/train_ct_volume_batch_reload.py -j "$JSON_CONFIG"
 
 EXIT_CODE=$?
 
