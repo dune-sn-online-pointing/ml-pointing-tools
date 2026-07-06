@@ -1,0 +1,32 @@
+{
+  "version": "v81",
+  "description": "CT v81: sparse point-cloud (DeepSets) model on nonzero pixels of burst-sample volumes + truth-free aux features. Same cat-level splits as v80.",
+  "model_name": "ct_points_v81",
+  "model": {
+    "max_points": 1024,
+    "point_mlp": [64, 128, 256],
+    "head_units": [128, 64],
+    "dropout_rate": 0.3
+  },
+  "data": {
+    "burst_samples_dir": "/eos/project-e/ep-nu/evilla/sn-online-pointing/sn-burst-samples",
+    "volume_subdir_fmt": "{cat}_volume_images_tick3_ch2_min2_tot3_e3p0/X",
+    "train_cats": [400, 571],
+    "val_cats": [572, 596],
+    "test_cats": [597, 621],
+    "max_train_per_class": 40000,
+    "max_val_per_class": 5000,
+    "max_test_per_class": 8000
+  },
+  "training": {
+    "epochs": 100,
+    "batch_size": 128,
+    "learning_rate": 0.001,
+    "patience": 15,
+    "augment": true,
+    "seed": 42
+  },
+  "output": {
+    "base_dir": "/eos/user/e/evilla/dune/sn-tps/neural_networks/channel_tagging"
+  }
+}

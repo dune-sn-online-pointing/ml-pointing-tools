@@ -4,11 +4,16 @@
 set -e
 
 JSON_CONFIG=""
+TRAIN_SCRIPT="channel_tagging/models/train_ct_volume_v80.py"
 
 while [[ $# -gt 0 ]]; do
     case $1 in
         -j|--json)
             JSON_CONFIG="$2"
+            shift 2
+            ;;
+        -s|--script)
+            TRAIN_SCRIPT="$2"
             shift 2
             ;;
         *)
@@ -51,7 +56,8 @@ echo ""
 
 echo "Working directory: $(pwd)"
 echo "Starting training..."
-python3 channel_tagging/models/train_ct_volume_v80.py -j "$JSON_CONFIG"
+echo "Trainer: $TRAIN_SCRIPT"
+python3 "$TRAIN_SCRIPT" -j "$JSON_CONFIG"
 EXIT_CODE=$?
 
 echo ""

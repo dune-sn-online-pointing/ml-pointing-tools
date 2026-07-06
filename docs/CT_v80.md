@@ -57,6 +57,22 @@ condor_submit channel_tagging/condor/submit_volume_v80_aux.sub
 
 Outputs go to `/eos/user/e/evilla/dune/sn-tps/neural_networks/channel_tagging/ct_volume_v80*_<timestamp>/`.
 
+## v81: sparse point-cloud variant
+
+The volumes are ~99.9% empty (~250 hit pixels of 258k). `train_ct_points_v81.py`
+represents each volume as a point cloud of nonzero pixels
+`(channel_rel, tick_rel, log1p(ADC))` and classifies with a DeepSets encoder
+(shared per-point MLP → masked max+mean pooling → dense head + aux features).
+~1000× smaller inputs, so it trains on 40k/class in minutes. True sparse
+convolutions (spconv/MinkowskiEngine) would need PyTorch extensions not in the
+LCG view — possible follow-up via `local_packages` if v81 shows promise.
+
+## Campaign summary PDF
+
+`channel_tagging/ana/ct_improvement_summary.py` regenerates
+`/eos/user/e/evilla/dune/sn-tps/neural_networks/channel_tagging/CT_improvement_summary.pdf`
+from all v80+ `results.json` it finds. Re-run it after each training completes.
+
 ## Baseline to beat
 
 v79 (2026-03-03, e2p0 volumes, random split): test accuracy 0.683,

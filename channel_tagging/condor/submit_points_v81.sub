@@ -1,0 +1,21 @@
+universe                = vanilla
+executable              = /afs/cern.ch/work/e/evilla/private/dune/refactor-ml-for-pointing/channel_tagging/scripts/wrapper_ct_v80.sh
+arguments               = -j /afs/cern.ch/work/e/evilla/private/dune/refactor-ml-for-pointing/channel_tagging/json/points_v81.json -s channel_tagging/models/train_ct_points_v81.py
+
+request_cpus            = 4
+request_memory          = 32GB
+request_gpus            = 1
+request_disk            = 10GB
+
++JobFlavour             = "nextweek"
+requirements            = (OpSysAndVer =?= "AlmaLinux9")
+
+initialdir              = /afs/cern.ch/work/e/evilla/private/dune/refactor-ml-for-pointing
+getenv                  = True
+
+log                     = /afs/cern.ch/work/e/evilla/private/dune/refactor-ml-for-pointing/channel_tagging/condor/logs/CT_v81_$(Cluster).log
+output                  = /afs/cern.ch/work/e/evilla/private/dune/refactor-ml-for-pointing/channel_tagging/condor/logs/CT_v81_$(Cluster).out
+error                   = /afs/cern.ch/work/e/evilla/private/dune/refactor-ml-for-pointing/channel_tagging/condor/logs/CT_v81_$(Cluster).err
+
+notification            = Error
+queue 1
