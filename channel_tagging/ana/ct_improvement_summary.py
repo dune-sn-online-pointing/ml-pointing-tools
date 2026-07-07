@@ -72,6 +72,79 @@ def collect_runs():
     return uniq
 
 
+PIPELINE_CAMPAIGNS = [
+    # (label, scenarios_root, scenario_name)
+    ('v52 @0.90 (production)', '/eos/user/e/evilla/dune/sn-tps/condor_scenarios_v4', 'scenario_3_full_pipeline'),
+    ('v80 @0.90 (mistuned)', '/eos/user/e/evilla/dune/sn-tps/condor_scenarios_v80ct', 'scenario_3_full_pipeline'),
+    ('v80 @0.85', '/eos/user/e/evilla/dune/sn-tps/condor_scenarios_v80val', 'scenario_3_v80_t85'),
+    ('v80 @0.875', '/eos/user/e/evilla/dune/sn-tps/condor_scenarios_v80val', 'scenario_3_v80_t875'),
+]
+
+
+def collect_pipeline_campaigns():
+    """Per-burst q68/n_sel/ct_acc for each campaign, restricted to common cats."""
+    camp = {}
+    for label, root, scen in PIPELINE_CAMPAIGNS:
+        per_cat = {}
+        for rep in glob.glob(os.path.join(root, 'cat*', 'scenario_cos_theta_report.json')):
+            try:
+                data = json.load(open(rep))
+            except Exception:
+                continue
+            for s in data.get('scenarios', []):
+                if s.get('scenario') == scen:
+                    per_cat[os.path.basename(os.path.dirname(rep))] = s
+        if per_cat:
+            camp[label] = per_cat
+    if not camp:
+        return None, None
+    common = sorted(set.intersection(*[set(v) for v in camp.values()]))
+    return camp, common
+
+
+def pipeline_page(pdf):
+    camp, common = collect_pipeline_campaigns()
+    if not camp or not common:
+        return
+    fig, (ax_t, ax_b) = plt.subplots(2, 1, figsize=(8.27, 11.69),
+                                     gridspec_kw={'height_ratios': [1, 1.3]})
+    ax_t.axis('off')
+    baseline_label = list(camp)[0]
+    qb = np.array([camp[baseline_label][c].get('q68_theta_deg') for c in common], dtype=float)
+    cells = []
+    for label, per_cat in camp.items():
+        q = np.array([per_cat[c].get('q68_theta_deg') for c in common], dtype=float)
+        n = np.array([per_cat[c].get('n_selected') for c in common], dtype=float)
+        a = np.array([per_cat[c].get('ct_accuracy') if per_cat[c].get('ct_accuracy')
+                      is not None else np.nan for c in common], dtype=float)
+        dq = q - qb
+        cells.append([label, f'{np.nanmedian(q):.1f}', f'{np.nanmedian(n):.0f}',
+                      f'{np.nanmean(a):.3f}',
+                      '—' if label == baseline_label else f'{np.nanmedian(dq):+.1f}',
+                      '—' if label == baseline_label else f'{100 * np.nanmean(dq < 0):.0f}%'])
+    table = ax_t.table(cellText=cells,
+                       colLabels=['operating point', 'q68 med [deg]', 'n_sel med',
+                                  'CT acc', 'paired dq68', 'cats improved'],
+                       loc='center', cellLoc='center')
+    table.auto_set_font_size(False)
+    table.set_fontsize(9)
+    table.scale(1, 1.6)
+    ax_t.set_title(f'Pipeline-level comparison (scenario_3, {len(common)} paired bursts)\n'
+                   'q68 = 68% quantile of MCMC pointing error; lower is better',
+                   fontsize=13, weight='bold')
+
+    for label, per_cat in camp.items():
+        q = np.array([per_cat[c].get('q68_theta_deg') for c in common], dtype=float)
+        ax_b.hist(q[np.isfinite(q)], bins=np.linspace(0, 120, 40), histtype='step',
+                  lw=2, label=label)
+    ax_b.set_xlabel('q68 pointing error per burst [deg]')
+    ax_b.set_ylabel('bursts')
+    ax_b.legend()
+    fig.tight_layout()
+    pdf.savefig(fig)
+    plt.close(fig)
+
+
 def text_page(pdf, title, lines, fontsize=11):
     fig = plt.figure(figsize=(8.27, 11.69))
     fig.text(0.08, 0.94, title, fontsize=16, weight='bold')
@@ -174,6 +247,9 @@ def main():
         fig.tight_layout()
         pdf.savefig(fig)
         plt.close(fig)
+
+        # ---- pipeline-level comparison page (if campaign trees exist) ----
+        pipeline_page(pdf)
 
         # ---- one page per run: confusion matrix + details ----
         for r in runs:
