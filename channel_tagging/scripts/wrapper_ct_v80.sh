@@ -1,15 +1,19 @@
 #!/bin/bash
-# HTCondor wrapper for CT volume training
+# HTCondor wrapper for CT v80 volume training (burst-sample volumes)
 
 set -e
 
-# Parse arguments
 JSON_CONFIG=""
+TRAIN_SCRIPT="channel_tagging/models/train_ct_volume_v80.py"
 
 while [[ $# -gt 0 ]]; do
     case $1 in
         -j|--json)
             JSON_CONFIG="$2"
+            shift 2
+            ;;
+        -s|--script)
+            TRAIN_SCRIPT="$2"
             shift 2
             ;;
         *)
@@ -25,15 +29,13 @@ if [[ -z "$JSON_CONFIG" ]]; then
 fi
 
 echo "========================================="
-echo "CHANNEL TAGGING TRAINING - HTCondor Job"
+echo "CHANNEL TAGGING v80 TRAINING - HTCondor Job"
 echo "========================================="
 echo "Job started at: $(date)"
 echo "Running on host: $(hostname)"
 echo "JSON config: $JSON_CONFIG"
 echo "========================================="
 
-# Navigate to project directory.
-# Prefer deriving from the JSON config absolute path: <repo>/channel_tagging/json/*.json
 if [[ -f "$JSON_CONFIG" ]]; then
     PROJECT_DIR="$(cd "$(dirname "$JSON_CONFIG")/../.." && pwd)"
 elif [[ -n "${_CONDOR_JOB_IWD:-}" ]] && [[ -f "${_CONDOR_JOB_IWD}/scripts/init.sh" ]]; then
@@ -44,30 +46,18 @@ else
 fi
 cd "$PROJECT_DIR"
 
-# Setup environment using init.sh
 echo "Setting up environment using init.sh..."
 source "$PROJECT_DIR/scripts/init.sh"
 echo ""
 
-# Check GPU availability
-echo ""
 echo "GPU Information:"
 nvidia-smi 2>/dev/null || echo "No GPU available (CPU-only training)"
 echo ""
 
-# Run training
-cd "$PROJECT_DIR"
-
 echo "Working directory: $(pwd)"
-echo "PYTHONPATH: $PYTHONPATH"
-echo ""
-
 echo "Starting training..."
-echo "Command: python3 channel_tagging/models/train_ct_volume_batch_reload.py -j $JSON_CONFIG"
-echo ""
-
-python3 channel_tagging/models/train_ct_volume_batch_reload.py -j "$JSON_CONFIG"
-
+echo "Trainer: $TRAIN_SCRIPT"
+python3 "$TRAIN_SCRIPT" -j "$JSON_CONFIG"
 EXIT_CODE=$?
 
 echo ""

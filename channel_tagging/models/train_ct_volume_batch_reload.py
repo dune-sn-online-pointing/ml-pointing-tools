@@ -53,7 +53,12 @@ def load_config(json_file):
 def create_deep_cnn(input_shape=(208, 1242, 1), filter_list=[28, 28, 29, 47, 48, 48], 
                     kernel_sizes=[3, 3, 3, 3, 3, 3], dropout_rate=0.3, 
                     dense_units=[96, 32], n_classes=2):
-    """Create a deep CNN model with custom architecture."""
+    """Create a deep CNN model with custom architecture.
+
+    Default parameters are the stable CT baseline used around the v57-era
+    production studies (same shape used in v52/v63 configs) and are the
+    reference defaults for v78 retraining unless overridden by JSON.
+    """
     model = keras.Sequential([
         keras.layers.Input(shape=input_shape)
     ])
@@ -87,11 +92,23 @@ def load_volume_batch(es_directory, cc_directory, plane='X',
     print(f"\nLoading batch for plane {plane} (seed={seed})...")
     print(f"Maximum {max_samples_per_class} samples per class")
     
-    es_pattern = f'{es_directory}/*plane{plane}.npz'
-    cc_pattern = f'{cc_directory}/*plane{plane}.npz'
-    
-    es_files = sorted(glob.glob(es_pattern))
-    cc_files = sorted(glob.glob(cc_pattern))
+    def discover_plane_files(base_directory, plane_name):
+        patterns = [
+            f'{base_directory}/*plane{plane_name}.npz',
+            f'{base_directory}/{plane_name}/*plane{plane_name}.npz',
+            f'{base_directory}/{plane_name}/*.npz',
+            f'{base_directory}/*.npz',
+        ]
+
+        for pattern in patterns:
+            files = sorted(glob.glob(pattern))
+            if files:
+                return files, pattern
+
+        return [], patterns[0]
+
+    es_files, es_pattern = discover_plane_files(es_directory, plane)
+    cc_files, cc_pattern = discover_plane_files(cc_directory, plane)
     
     if not es_files or not cc_files:
         raise ValueError(f"No NPZ files found! ES: {es_pattern}, CC: {cc_pattern}")
@@ -104,6 +121,7 @@ def load_volume_batch(es_directory, cc_directory, plane='X',
     
     images_list = []
     labels_list = []
+    energies_list = []
     
     # Load ES samples (label=0)
     es_count = 0
@@ -113,6 +131,7 @@ def load_volume_batch(es_directory, cc_directory, plane='X',
         try:
             data = np.load(f, allow_pickle=True)
             imgs = data['images']
+            metadata = data['metadata'] if 'metadata' in data else None
             
             # Randomly sample from this file
             indices = np.arange(len(imgs))
@@ -130,6 +149,10 @@ def load_volume_batch(es_directory, cc_directory, plane='X',
                         img_array = img_array / img_max
                     images_list.append(img_array)
                     labels_list.append(0)  # ES
+                    if metadata is not None and idx < len(metadata) and isinstance(metadata[idx], dict):
+                        energies_list.append(float(metadata[idx].get('particle_energy', np.nan)))
+                    else:
+                        energies_list.append(np.nan)
                     es_count += 1
         except Exception as e:
             print(f"Warning: Failed to load {f}: {e}")
@@ -146,6 +169,7 @@ def load_volume_batch(es_directory, cc_directory, plane='X',
         try:
             data = np.load(f, allow_pickle=True)
             imgs = data['images']
+            metadata = data['metadata'] if 'metadata' in data else None
             
             # Randomly sample from this file
             indices = np.arange(len(imgs))
@@ -163,6 +187,10 @@ def load_volume_batch(es_directory, cc_directory, plane='X',
                         img_array = img_array / img_max
                     images_list.append(img_array)
                     labels_list.append(1)  # CC
+                    if metadata is not None and idx < len(metadata) and isinstance(metadata[idx], dict):
+                        energies_list.append(float(metadata[idx].get('particle_energy', np.nan)))
+                    else:
+                        energies_list.append(np.nan)
                     cc_count += 1
         except Exception as e:
             print(f"Warning: Failed to load {f}: {e}")
@@ -176,6 +204,7 @@ def load_volume_batch(es_directory, cc_directory, plane='X',
     # Convert to arrays
     images = np.array(images_list, dtype=np.float32)
     labels = np.array(labels_list, dtype=np.int32)
+    energies = np.array(energies_list, dtype=np.float32)
     
     # Add channel dimension
     images = np.expand_dims(images, axis=-1)
@@ -185,12 +214,13 @@ def load_volume_batch(es_directory, cc_directory, plane='X',
     np.random.shuffle(indices)
     images = images[indices]
     labels = labels[indices]
+    energies = energies[indices]
     
     print(f"Final batch shape: {images.shape}, labels: {labels.shape}")
-    return images, labels
+    return images, labels, energies
 
 
-def split_data(images, labels, train_frac=0.7, val_frac=0.15):
+def split_data(images, labels, energies, train_frac=0.7, val_frac=0.15):
     """Split data into train/val/test sets."""
     n = len(images)
     n_train = int(n * train_frac)
@@ -198,15 +228,18 @@ def split_data(images, labels, train_frac=0.7, val_frac=0.15):
     
     train_images = images[:n_train]
     train_labels = labels[:n_train]
+    train_energies = energies[:n_train]
     
     val_images = images[n_train:n_train + n_val]
     val_labels = labels[n_train:n_train + n_val]
+    val_energies = energies[n_train:n_train + n_val]
     
     test_images = images[n_train + n_val:]
     test_labels = labels[n_train + n_val:]
+    test_energies = energies[n_train + n_val:]
     
     print(f"Split: train={len(train_images)}, val={len(val_images)}, test={len(test_images)}")
-    return (train_images, train_labels), (val_images, val_labels), (test_images, test_labels)
+    return (train_images, train_labels, train_energies), (val_images, val_labels, val_energies), (test_images, test_labels, test_energies)
 
 
 class BatchReloadCallback(keras.callbacks.Callback):
@@ -312,8 +345,8 @@ def train_with_batch_reload(model, initial_train, initial_val, test_data,
 # DISABLED:     )
 # DISABLED:     
     # Store data in model for callback access
-    train_images, train_labels = initial_train
-    val_images, val_labels = initial_val
+    train_images, train_labels, train_energies = initial_train
+    val_images, val_labels, val_energies = initial_val
     
     # Training loop with manual reloading
     history_all = {'loss': [], 'accuracy': [], 'val_loss': [], 'val_accuracy': []}
@@ -352,17 +385,17 @@ def train_with_batch_reload(model, initial_train, initial_val, test_data,
             
             # Clear memory
             import gc
-            del train_images, train_labels, val_images, val_labels
+            del train_images, train_labels, train_energies, val_images, val_labels, val_energies
             gc.collect()
             
             # Load new batch
             seed = (cycle + 1) * 42
-            images, labels = data_loader_fn(seed=seed)
+            images, labels, energies = data_loader_fn(seed=seed)
             
             # Split
-            train_data, val_data, _ = split_fn(images, labels)
-            train_images, train_labels = train_data
-            val_images, val_labels = val_data
+            train_data, val_data, _ = split_fn(images, labels, energies)
+            train_images, train_labels, train_energies = train_data
+            val_images, val_labels, val_energies = val_data
             
             print(f"✓ New batch loaded: {len(train_images)} train, {len(val_images)} val")
             print(f"{'='*70}\n")
@@ -375,7 +408,7 @@ def train_with_batch_reload(model, initial_train, initial_val, test_data,
     return model, History(history_all), test_data
 
 
-def evaluate_model(model, test_images, test_labels, output_folder):
+def evaluate_model(model, test_images, test_labels, test_energies, output_folder):
     """Evaluate model on test set."""
     print("\n" + "="*70)
     print("EVALUATING MODEL")
@@ -422,7 +455,7 @@ def evaluate_model(model, test_images, test_labels, output_folder):
                  predictions=predictions,
                  true_labels=test_labels,
                  test_images=test_images,
-                 energies=None)  # No energy data available in this training
+                 energies=test_energies)
         print(f"✓ Saved predictions to {pred_file}")
     
     return {
@@ -483,10 +516,10 @@ def main():
     print("\n" + "="*70)
     print("STEP 1: LOADING INITIAL DATA")
     print("="*70)
-    images, labels = data_loader_fn(seed=42)
+    images, labels, energies = data_loader_fn(seed=42)
     
     # Split data
-    train_data, val_data, test_data = split_data(images, labels)
+    train_data, val_data, test_data = split_data(images, labels, energies)
     
     # Create model
     print("\n" + "="*70)
@@ -496,6 +529,9 @@ def main():
     input_shape = (208, 1242, 1)
     model_params = config.get('model_parameters', {})
     
+    # Architecture note for v78 retraining:
+    # Keep the historical v57-era CT baseline defaults via model_parameters,
+    # while only swapping the input sample directories in the JSON config.
     model = create_deep_cnn(
         input_shape=input_shape,
         filter_list=model_params.get('filter_list', [28, 28, 29, 47, 48, 48]),
@@ -543,8 +579,8 @@ def main():
     print("STEP 4: EVALUATION")
     print("="*70)
     
-    test_images, test_labels = test_data
-    metrics = evaluate_model(model, test_images, test_labels, output_folder)
+    test_images, test_labels, test_energies = test_data
+    metrics = evaluate_model(model, test_images, test_labels, test_energies, output_folder)
     
     # Save results
     results = {

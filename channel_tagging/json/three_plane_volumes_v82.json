@@ -1,0 +1,31 @@
+{
+  "version": "v82",
+  "description": "CT v82: three-plane (U+V+X) volume images from burst samples, matched by (file, event). Per-plane conv towers, log1p, cat-level splits as v80.",
+  "model_name": "ct_three_plane_vol_v82",
+  "model": {
+    "filter_list": [24, 24, 32, 32, 48, 48],
+    "dense_units": [96, 32],
+    "dropout_rate": 0.3
+  },
+  "data": {
+    "burst_samples_dir": "/eos/project-e/ep-nu/evilla/sn-online-pointing/sn-burst-samples",
+    "volume_subdir_fmt": "{cat}_volume_images_tick3_ch2_min2_tot3_e3p0",
+    "train_cats": [400, 571],
+    "val_cats": [572, 596],
+    "test_cats": [597, 621],
+    "max_train_per_class": 10000,
+    "max_val_per_class": 2000,
+    "max_test_per_class": 3000
+  },
+  "training": {
+    "epochs": 40,
+    "batch_size": 32,
+    "learning_rate": 0.001,
+    "patience": 8,
+    "augment": true,
+    "seed": 42
+  },
+  "output": {
+    "base_dir": "/eos/user/e/evilla/dune/sn-tps/neural_networks/channel_tagging"
+  }
+}

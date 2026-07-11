@@ -1,0 +1,32 @@
+{
+  "version": "v80",
+  "description": "CT v80: retrain on sn-burst-samples volume images at production conditions (e3p0), cat-level splits, log1p preprocessing, BatchNorm CNN. Image-only variant.",
+  "model_name": "ct_volume_v80",
+  "model": {
+    "use_aux_features": false,
+    "filter_list": [32, 32, 48, 48, 64, 64],
+    "dense_units": [96, 32],
+    "dropout_rate": 0.3
+  },
+  "data": {
+    "burst_samples_dir": "/eos/project-e/ep-nu/evilla/sn-online-pointing/sn-burst-samples",
+    "volume_subdir_fmt": "{cat}_volume_images_tick3_ch2_min2_tot3_e3p0/X",
+    "train_cats": [400, 571],
+    "val_cats": [572, 596],
+    "test_cats": [597, 621],
+    "max_train_per_class": 20000,
+    "max_val_per_class": 3000,
+    "max_test_per_class": 4000
+  },
+  "training": {
+    "epochs": 60,
+    "batch_size": 32,
+    "learning_rate": 0.001,
+    "patience": 10,
+    "augment": true,
+    "seed": 42
+  },
+  "output": {
+    "base_dir": "/eos/user/e/evilla/dune/sn-tps/neural_networks/channel_tagging"
+  }
+}

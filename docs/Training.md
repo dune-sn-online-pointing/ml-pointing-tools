@@ -76,3 +76,74 @@ python3 electron_direction/ana/cnn_feature_interpretation.py /path/to/ed/output_
 
 Both tasks provide wrapper scripts under their `scripts/` folder, and `.sub` submit files under `condor/`.
 Those are intended for grid/batch training; for a quick sanity check, prefer the local commands above.
+
+### Recommended workflow
+
+1. Validate JSON config before submission:
+
+```bash
+python3 scripts/validate_job_config.py channel_tagging/json/<your_config>.json
+```
+
+2. Run a tiny local smoke test first (recommended):
+
+```bash
+python3 channel_tagging/models/train_ct_volume_batch_reload.py \
+  -j channel_tagging/json/<your_config>.json \
+  --test-local
+```
+
+3. Submit to Condor:
+
+```bash
+condor_submit channel_tagging/condor/<your_submit_file>.sub
+```
+
+4. Monitor job status and logs:
+
+```bash
+condor_q <cluster_id>
+tail -f channel_tagging/condor/logs/<job_name>_<cluster_id>.out
+tail -f channel_tagging/condor/logs/<job_name>_<cluster_id>.err
+```
+
+### Memory and resource notes
+
+- **CT volume trainings**: request **120GB** memory by default to avoid OOM holds.
+- For current CT volume production samples, using **10k samples/class** is a safe baseline for stability.
+- `request_gpus = 1` is typically required for practical training time.
+- Keep `requirements = (OpSysAndVer =?= "AlmaLinux9")` unless you have a specific reason to change it.
+- If a job is held for memory (`cgroup memory limit`), increase `request_memory` and resubmit.
+
+### Minimal Condor submit template
+
+```text
+universe                = vanilla
+executable              = /absolute/path/to/repo/channel_tagging/scripts/wrapper_ct_simple.sh
+arguments               = -j /absolute/path/to/repo/channel_tagging/json/<config>.json
+
+request_cpus            = 4
+request_memory          = 120GB
+request_gpus            = 1
+request_disk            = 15GB
+
++JobFlavour             = "nextweek"
+requirements            = (OpSysAndVer =?= "AlmaLinux9")
+
+initialdir              = /absolute/path/to/repo
+getenv                  = True
+
+log                     = /absolute/path/to/repo/channel_tagging/condor/logs/<job_name>_$(Cluster).log
+output                  = /absolute/path/to/repo/channel_tagging/condor/logs/<job_name>_$(Cluster).out
+error                   = /absolute/path/to/repo/channel_tagging/condor/logs/<job_name>_$(Cluster).err
+
+notification            = Error
+queue 1
+```
+
+### Cleanup and resubmission (if needed)
+
+```bash
+condor_rm <cluster_id>
+rm -f channel_tagging/condor/logs/<job_name>_<cluster_id>.*
+```
