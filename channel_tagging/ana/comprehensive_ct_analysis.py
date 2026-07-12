@@ -614,73 +614,73 @@ def plot_prediction_distribution(predictions, fig):
 
 
 def plot_confusion_matrices_thresholds(predictions, fig):
-    """Page with confusion matrices at different confidence thresholds."""
+    """Page with confusion matrices at different ES-selection thresholds.
+
+    The threshold is the decision cut on P(ES): a cluster is tagged ES iff
+    P(ES) >= threshold, otherwise CC. This matches how the selection is applied
+    in the pipeline. It is NOT a confidence/coverage filter, so every event is
+    classified at each threshold (N is constant); raising the threshold makes
+    the ES selection stricter, moving true ES into the CC column.
+    """
     y_true = predictions['true_labels'].astype(int)
     y_prob = predictions['predictions']
-    y_pred = y_prob.argmax(axis=1)
-    
+
     n_classes = y_prob.shape[1]
     labels = [CHANNEL_LABELS.get(i, f'C{i}') for i in range(n_classes)]
-    
-    # Define thresholds to test
+
+    # ES is class 0 (label convention ES=0, CC=1)
+    p_es = y_prob[:, 0]
+
+    # Define ES-selection thresholds to test
     thresholds = [0.6, 0.7, 0.8, 0.9]
-    
+
     # Create 2x2 subplot grid
     gs = gridspec.GridSpec(2, 2, figure=fig, hspace=0.35, wspace=0.3)
-    
+
+    from sklearn.metrics import confusion_matrix, accuracy_score
+
     for idx, threshold in enumerate(thresholds):
         ax = fig.add_subplot(gs[idx // 2, idx % 2])
-        
-        # Apply threshold
-        max_probs = y_prob.max(axis=1)
-        mask = max_probs >= threshold
-        
-        # Filter predictions
-        y_true_filt = y_true[mask]
-        y_pred_filt = y_pred[mask]
-        
-        if len(y_true_filt) == 0:
-            ax.text(0.5, 0.5, f'No samples above threshold {threshold}',
-                   ha='center', va='center', transform=ax.transAxes,
-                   fontsize=12, fontweight='bold')
-            continue
-        
-        # Calculate confusion matrix
-        from sklearn.metrics import confusion_matrix, accuracy_score
-        cm = confusion_matrix(y_true_filt, y_pred_filt, labels=range(n_classes))
+
+        # Decision cut on P(ES): tag ES (0) iff P(ES) >= threshold, else CC.
+        # For >2 classes, non-ES clusters take their argmax over the CC classes.
+        if n_classes == 2:
+            non_es_pred = np.ones_like(y_true)
+        else:
+            non_es_pred = 1 + y_prob[:, 1:].argmax(axis=1)
+        y_pred_t = np.where(p_es >= threshold, 0, non_es_pred)
+
+        # Confusion matrix over ALL events, normalized by true class (recall)
+        cm = confusion_matrix(y_true, y_pred_t, labels=range(n_classes))
         cm_norm = cm.astype('float') / (cm.sum(axis=1)[:, np.newaxis] + 1e-10)
         cm_norm = np.nan_to_num(cm_norm)
-        
-        # Plot confusion matrix
+
         im = ax.imshow(cm_norm, interpolation='nearest', cmap='Blues', vmin=0, vmax=1)
-        
-        # Add percentage annotations
+
         thresh_color = cm_norm.max() / 2.
         for i in range(n_classes):
             for j in range(n_classes):
                 color = "white" if cm_norm[i, j] > thresh_color else "black"
-                text = f'{cm_norm[i, j]:.1%}'
-                ax.text(j, i, text, ha="center", va="center",
+                ax.text(j, i, f'{cm_norm[i, j]:.1%}', ha="center", va="center",
                        color=color, fontsize=9 if n_classes > 3 else 11, fontweight='bold')
-        
-        # Labels
+
         ax.set_xticks(range(n_classes))
         ax.set_yticks(range(n_classes))
         ax.set_xticklabels(labels, rotation=45, ha='right', fontsize=8 if n_classes > 3 else 9)
         ax.set_yticklabels(labels, fontsize=8 if n_classes > 3 else 9)
         ax.set_xlabel('Predicted Label', fontsize=10, fontweight='bold')
         ax.set_ylabel('True Label', fontsize=10, fontweight='bold')
-        
-        # Calculate metrics
-        acc = accuracy_score(y_true_filt, y_pred_filt)
-        kept_pct = 100 * mask.sum() / len(mask)
-        n_samples = mask.sum()
-        
-        title_text = f'Threshold ≥ {threshold:.1f}\n'
-        title_text += f'Acc={acc:.1%}, N={n_samples:,} ({kept_pct:.1f}%)'
+
+        # ES-selection metrics: efficiency (recall) and purity (precision)
+        acc = accuracy_score(y_true, y_pred_t)
+        sel = (y_pred_t == 0)
+        es_eff = (sel & (y_true == 0)).sum() / max((y_true == 0).sum(), 1)
+        es_pur = (sel & (y_true == 0)).sum() / max(sel.sum(), 1)
+
+        title_text = (f'ES threshold ≥ {threshold:.1f}\n'
+                      f'Acc={acc:.1%}, ES eff={es_eff:.1%}, ES purity={es_pur:.1%}')
         ax.set_title(title_text, fontsize=11, fontweight='bold')
-        
-        # Add colorbar
+
         if idx % 2 == 1:  # Right column
             cbar = plt.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
             cbar.set_label('Recall', rotation=270, labelpad=15, fontsize=9, fontweight='bold')
@@ -1107,10 +1107,10 @@ def generate_comprehensive_analysis(results_dir, output_pdf=None):
         plt.close(fig)
         
         # Page 6: Confusion matrices at different thresholds (NEW!)
-        print("�� Generating page 6/9: Confidence Threshold Analysis...")
+        print("Generating page 6/9: ES-Selection Threshold Analysis...")
         fig = plt.figure(figsize=(17, 11))
         plot_confusion_matrices_thresholds(predictions, fig)
-        fig.suptitle(f'{model_name.upper()} - Confusion Matrices at Different Confidence Thresholds', 
+        fig.suptitle(f'{model_name.upper()} - Confusion Matrices at Different ES-Selection Thresholds',
                     fontsize=16, fontweight='bold', y=0.995)
         pdf.savefig(fig, bbox_inches='tight')
         plt.close(fig)
