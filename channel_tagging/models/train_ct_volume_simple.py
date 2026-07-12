@@ -336,8 +336,11 @@ def main():
                 dpi=150, bbox_inches='tight')
     plt.close()
     
-    # Generate classification report
-    report = classification_report(y_true, y_pred, target_names=class_names)
+    # Generate classification report. Pass explicit labels so it stays valid
+    # even when a (tiny) test split happens to contain a single class.
+    report = classification_report(y_true, y_pred,
+                                   labels=list(range(len(class_names))),
+                                   target_names=class_names)
     with open(os.path.join(output_dir, 'classification_report.txt'), 'w') as f:
         f.write(report)
     
