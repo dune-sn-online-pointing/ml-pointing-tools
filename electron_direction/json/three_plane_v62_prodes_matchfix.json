@@ -1,0 +1,40 @@
+{
+  "version": "v62",
+  "description": "ED v62: the v58 recipe retrained from scratch on the ES PRODUCTION pool rebuilt with the FIXED 3-plane matcher (partner = most energetic induction candidate). Same architecture, preprocessing, optimizer and schedule as v58; v58's own train/val split is not recoverable (unseeded shuffle, no file provenance), so a fixed-seed 0.70/0.15/0.15 split BY SOURCE FILE is used and a real held-out test set exists. Loss is v58's angular loss with a safe acos clip (v58 went NaN at epoch 13; its deployed weights are the epoch-12 checkpoint).",
+  "model": {
+    "name": "three_plane_v62_matchfix",
+    "architecture": "three_plane_cnn",
+    "input_shape": [128, 32, 1],
+    "output_dim": 3,
+    "n_conv_layers": 4,
+    "n_filters": 64,
+    "kernel_size": 3,
+    "n_dense_layers": 2,
+    "n_dense_units": 256,
+    "dropout_rate": 0.3
+  },
+  "data": {
+    "packed_dir": "/eos/project-e/ep-nu/evilla/sn-online-pointing/prod_es_matchfix/packed_v58sel_seed42",
+    "source_pool": "/eos/project-e/ep-nu/evilla/sn-online-pointing/prod_es_matchfix/es_production_cluster_images_tick3_ch2_min2_tot3_e2p0_matchfix",
+    "selection": "v58 training selection (data_loader.load_three_plane_matched): X match_id != -1 and the (event, match_id) pair present in U and V; no main-track requirement on the partners",
+    "preprocessing": "raw float32 ADC, channel dim appended, no normalization (as v58 / pipeline ed_inference.py)"
+  },
+  "training": {
+    "loss": "safe_angular_loss",
+    "safe_angular_eps": 1e-6,
+    "optimizer": "adam",
+    "learning_rate": 0.001,
+    "clipnorm": 0.5,
+    "batch_size": 64,
+    "epochs": 200,
+    "early_stopping_patience": 30,
+    "reduce_lr_patience": 10,
+    "reduce_lr_factor": 0.5,
+    "reduce_lr_min_lr": 1e-6,
+    "seed": 42
+  },
+  "baseline_models": [
+    {"tag": "v58", "path": "/eos/project-e/ep-nu/evilla/sn-online-pointing/neural-networks/electron_direction/three_plane_three_plane_v58_200k_lr_schedule_20251118_110931/checkpoints/model_epoch_12_val_loss_0.8898.keras"}
+  ],
+  "output": {"base_dir": "/eos/project-e/ep-nu/evilla/sn-online-pointing/neural-networks/electron_direction"}
+}

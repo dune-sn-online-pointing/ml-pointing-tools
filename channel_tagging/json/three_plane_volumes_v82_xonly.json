@@ -1,7 +1,7 @@
 {
-  "version": "v82",
-  "description": "CT v82: three-plane (U+V+X) burst-sample volume images, matched by (file basename, event), plus per-sample reweighting of ES and CC to a common reconstructed main-cluster energy spectrum. Per-plane conv towers, log1p, v80 cat-level splits and caps.",
-  "model_name": "ct_three_plane_volumes_v82",
+  "version": "v82-xonly",
+  "description": "CT v82 ablation: X plane only, but on exactly the same plane-matched event selection and with the same energy reweighting as v82. Isolates the effect of adding the U and V towers (v82 vs this) from the effect of the reweighting (this vs v80).",
+  "model_name": "ct_three_plane_volumes_v82_xonly",
   "model": {
     "filter_list": [24, 24, 32, 32, 48, 48],
     "dense_units": [96, 32],
@@ -11,7 +11,7 @@
     "burst_samples_dir": "/eos/project-e/ep-nu/evilla/sn-online-pointing/sn-burst-samples",
     "volume_subdir_fmt": "{cat}_volume_images_tick3_ch2_min2_tot3_e3p0",
     "match_planes": ["U", "V", "X"],
-    "input_planes": ["U", "V", "X"],
+    "input_planes": ["X"],
     "train_cats": [400, 571],
     "val_cats": [572, 596],
     "test_cats": [597, 621],

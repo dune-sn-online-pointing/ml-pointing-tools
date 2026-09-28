@@ -1,0 +1,49 @@
+{
+  "version": "v61",
+  "description": "ED v61: retrain the v58 three-plane CNN on ES main-track clusters from sn-burst-samples cats at production conditions (tick3_ch2_min2_tot3_e3p0), cat-level split identical to CT v80 (train 400-571, val 572-596, test 597-621). Raw ADC input, angular loss with a numerically safe acos clip, clipnorm, NaN guard, best checkpoint by val_loss. Baseline v58 evaluated on the same test clusters.",
+  "model": {
+    "name": "three_plane_v61_burstcats_es",
+    "architecture": "three_plane_cnn",
+    "input_shape": [128, 32, 1],
+    "output_dim": 3,
+    "n_conv_layers": 4,
+    "n_filters": 64,
+    "kernel_size": 3,
+    "n_dense_layers": 2,
+    "n_dense_units": 256,
+    "dropout_rate": 0.3
+  },
+  "data": {
+    "burst_samples_dir": "/eos/project-e/ep-nu/evilla/sn-online-pointing/sn-burst-samples",
+    "cluster_subdir_fmt": "{cat}_cluster_images_tick3_ch2_min2_tot3_e3p0",
+    "x_file_glob": "es_*_bg_matched_planeX.npz",
+    "train_cats": [400, 571],
+    "val_cats": [572, 596],
+    "test_cats": [597, 621],
+    "selection": "pipeline three-plane: main-track (col2==1) match_id (col13!=-1) present in X,U,V; X metadata as reference",
+    "preprocessing": "raw float32 ADC, channel dim appended, no normalization (as v58 / pipeline ed_inference.py)"
+  },
+  "training": {
+    "loss": "safe_angular_loss",
+    "safe_angular_eps": 1e-6,
+    "optimizer": "adam",
+    "learning_rate": 0.001,
+    "clipnorm": 0.5,
+    "batch_size": 64,
+    "epochs": 200,
+    "early_stopping_patience": 30,
+    "reduce_lr_patience": 10,
+    "reduce_lr_factor": 0.5,
+    "reduce_lr_min_lr": 1e-6,
+    "seed": 42
+  },
+  "baseline_models": [
+    {
+      "tag": "v58",
+      "path": "/eos/project-e/ep-nu/evilla/sn-online-pointing/neural-networks/electron_direction/three_plane_three_plane_v58_200k_lr_schedule_20251118_110931/checkpoints/model_epoch_12_val_loss_0.8898.keras"
+    }
+  ],
+  "output": {
+    "base_dir": "/eos/project-e/ep-nu/evilla/sn-online-pointing/neural-networks/electron_direction"
+  }
+}

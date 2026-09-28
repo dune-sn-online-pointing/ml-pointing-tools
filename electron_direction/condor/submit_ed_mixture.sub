@@ -1,0 +1,22 @@
+# Offline re-fit of the ed_retrain dev bursts with alternative likelihood tables
+universe                = vanilla
+executable              = /afs/cern.ch/work/e/evilla/private/dune/refactor-ml-for-pointing/electron_direction/scripts/wrapper_snop_ana.sh
+arguments               = $(args)
+
+request_cpus            = 1
+request_memory          = 4GB
+request_disk            = 4GB
+
++JobFlavour             = "workday"
+requirements            = (OpSysAndVer =?= "AlmaLinux9")
+
+initialdir              = /afs/cern.ch/work/e/evilla/private/dune/refactor-snop-pipeline
+getenv                  = True
+environment             = "SNOP_REPO_DIR=/afs/cern.ch/work/e/evilla/private/dune/refactor-snop-pipeline"
+
+log                     = /afs/cern.ch/work/e/evilla/private/dune/refactor-ml-for-pointing/electron_direction/condor/logs/ed_mixture/job_$(ClusterId)_$(ProcId).log
+output                  = /afs/cern.ch/work/e/evilla/private/dune/refactor-ml-for-pointing/electron_direction/condor/logs/ed_mixture/job_$(ClusterId)_$(ProcId).out
+error                   = /afs/cern.ch/work/e/evilla/private/dune/refactor-ml-for-pointing/electron_direction/condor/logs/ed_mixture/job_$(ClusterId)_$(ProcId).err
+
+notification            = Error
+queue args from /afs/cern.ch/work/e/evilla/private/dune/refactor-ml-for-pointing/electron_direction/condor/ed_mixture.args

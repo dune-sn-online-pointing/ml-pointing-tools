@@ -1,0 +1,35 @@
+{
+  "version": "v84",
+  "description": "CT v84: v83 (common-energy-spectrum sample weights) plus per-image max normalization of the log1p image and the volume_v80_aux scalar branch extended with the reconstructed main-cluster energy. The calorimetric scale is removed from the pixels and handed to the network explicitly, so the convolutional part must learn shape.",
+  "model_name": "ct_volume_v84",
+  "model": {
+    "use_aux_features": true,
+    "aux_include_energy": true,
+    "filter_list": [32, 32, 48, 48, 64, 64],
+    "dense_units": [96, 32],
+    "dropout_rate": 0.3
+  },
+  "data": {
+    "burst_samples_dir": "/eos/project-e/ep-nu/evilla/sn-online-pointing/sn-burst-samples",
+    "volume_subdir_fmt": "{cat}_volume_images_tick3_ch2_min2_tot3_e3p0/X",
+    "per_image_normalization": "max",
+    "train_cats": [400, 571],
+    "val_cats": [572, 596],
+    "test_cats": [597, 621],
+    "max_train_per_class": 20000,
+    "max_val_per_class": 3000,
+    "max_test_per_class": 4000
+  },
+  "training": {
+    "epochs": 60,
+    "batch_size": 32,
+    "learning_rate": 0.001,
+    "patience": 10,
+    "augment": true,
+    "seed": 42,
+    "energy_reweight": true
+  },
+  "output": {
+    "base_dir": "/eos/project-e/ep-nu/evilla/sn-online-pointing/neural-networks/channel_tagging"
+  }
+}
