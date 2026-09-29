@@ -956,3 +956,151 @@ explicit; say the word.
 * 64 condor jobs (cluster 15968773) -> 129 result files, **591 kB** in
   `pipeline-dev/ed_retrain/r3_tables/`.
 * `/eos/project-e/ep-nu` free inodes: **98 692**. Nothing written to the user area.
+
+---
+
+# Burst-axis tables for the perfect-CT scenarios (added 28 September 2026)
+
+*Offline, r3 per-event outputs. One new script, `python/ana/ed_r3_burstaxis.py`
+(+ scenario 5 added to `ed_r3_eval.py` and the scenario blocks to `ed_r3_report.py`, both mine).
+Tables built on the training slice cats 673-900; evaluated on 2-399 and 901-1224 with the
+50 dev cats reported separately.*
+
+## 27. One table, not three
+
+Scenarios 2, 5 and 6 differ **only** in the energy cut (E > 3 / 10 / 5 MeV): their per-event
+outputs are bit-identical (verified on cat000700 and cat000905 — metadata and reco directions
+both `array_equal`). So one pass over the scenario-2 outputs with three cuts gives all three
+tables, and the question is whether the cut changes the table at all.
+
+Measured row by row (⟨cos⟩ per energy row of the three tables):
+
+| E [MeV] | e3 | e5 | e10 | max spread |
+|---|---|---|---|---|
+| 2-4 | 0.252 (N=2291) | 0.479 (filled) | 0.592 (filled) | 0.340 |
+| 4-6 | 0.436 (N=7010) | 0.479 (N=3630) | 0.592 (filled) | 0.156 |
+| 6-8 | 0.534 (N=7148) | 0.534 (N=7148) | 0.592 (filled) | 0.059 |
+| 8-10 | 0.568 (N=6795) | 0.568 (N=6795) | 0.592 (filled) | 0.025 |
+| 10-12 and above | identical | identical | identical | **0.000** |
+
+Every row at or above the cut is cut-independent; only the row the cut straddles differs
+(4-6 for E > 5), plus rows below it which are extrapolated fills. Crucially the bilinear
+energy lookup **reaches one bin below** the event's bin — an event at 10.5 MeV interpolates
+between the 8-10 and 10-12 row centres — so the rows just below the cut *are* queried, and the
+loosest table is the only one that has real data there.
+
+The fits confirm it: **the single E > 3 table is as good as or better than the cut-matched one
+in every scenario**. So the recommendation is one file,
+`cosine_energy_pdf_burstaxis_r3_e3.npz`, for scenarios 2, 5 and 6. (The e5 and e10 variants
+are kept next to it for the record.)
+
+## 28. Results (772 cats: 398 old era, 324 new era, 50 dev reported separately)
+
+Gate: with v63's own table the offline fit reproduces the r3 reports —
+max|cos − report| = 3.7e-04 (sc 2), 2.5e-04 (sc 6), 7.2e-04 (sc 5), n_selected matching for
+every cat. theta68 [deg]:
+
+**Scenario 2 (perfect CT, E > 3)**
+
+| selection | Ncats | Tv63 (r3 default) | BA burst-axis | d vs Tv63 [68% boot] |
+|---|---|---|---|---|
+| ALL | 772 | 9.14 | **8.68** | **-0.46 [-0.62, -0.28]** |
+| 1-399 old era | 398 | 9.08 | 8.69 | -0.39 [-0.65, -0.22] |
+| 901-1224 new era | 324 | 9.08 | 8.39 | -0.69 [-0.93, -0.25] |
+| 623-672 dev | 50 | 10.83 | 10.39 | -0.44 [-1.07, +0.67] |
+
+median 6.87 -> 6.60; frac>30 0.00 both; coverage 1.16 -> 1.13.
+
+**Scenario 6 (perfect CT, E > 5)**
+
+| selection | Ncats | Tv63 | BA (E>5) | BAe3 (E>3) | d BAe3 vs Tv63 |
+|---|---|---|---|---|---|
+| ALL | 772 | 8.93 | 8.53 | **8.43** | **-0.50 [-0.66, -0.37]** |
+| 1-399 | 398 | 8.88 | 8.42 | 8.33 | -0.55 [-0.76, -0.38] |
+| 901-1224 | 324 | 8.80 | 8.37 | 8.22 | -0.58 [-0.76, -0.18] |
+| 623-672 dev | 50 | 10.30 | 10.04 | 10.06 | -0.24 [-1.20, +0.34] |
+
+median 6.72 -> 6.38; frac>30 0.00; coverage 1.17 -> 1.14.
+
+**Scenario 5 (perfect CT, E > 10)**
+
+| selection | Ncats | Tv63 | BA (E>10) | BAe3 (E>3) | d BAe3 vs Tv63 |
+|---|---|---|---|---|---|
+| ALL | 772 | 8.36 | 8.20 | **8.09** | **-0.28 [-0.44, -0.07]** |
+| 1-399 | 398 | 8.41 | 8.15 | 8.02 | -0.40 [-0.62, -0.22] |
+| 901-1224 | 324 | 8.08 | 7.76 | 7.76 | -0.32 [-0.44, +0.16] |
+| 623-672 dev | 50 | 9.82 | 9.65 | 9.59 | -0.23 [-0.68, +0.19] |
+
+median 6.39 -> 6.25; frac>30 0.00; coverage 1.12 -> 1.08.
+
+Every scenario improves, coverage improves slightly everywhere (the tables were
+over-confident, now marginally less so), and the gains are smaller than in scenario 3
+(-1.26) or scenario 1 (-0.47) because these selections are pure ES and the convolution is the
+only thing that was missing. The 50 dev cats are systematically ~1.3 deg worse than either
+era in all three scenarios — they are a slightly unlucky subset, which is worth remembering
+when reading earlier dev-burst-only numbers.
+
+## 29. Final recommended table set, all six scenarios
+
+| scenario | table | measured gain vs r3 |
+|---|---|---|
+| 1 best case (true dirs) | `cosine_energy_pdf_kinematic_r3.npz` | **-0.47** [-0.49,-0.45] |
+| 2 perfect CT (E>3) | `cosine_energy_pdf_burstaxis_r3_e3.npz` | **-0.46** [-0.62,-0.28] |
+| 3 full pipeline | `cosine_energy_pdf_mixture_ctsel_global_flatcc.npz` | **-1.26** [-1.46,-0.82] |
+| 4 weighted CT | v63 `cosine_energy_pdf.npz` (unchanged) | table-insensitive (section 17) |
+| 5 perfect CT (E>10) | `cosine_energy_pdf_burstaxis_r3_e3.npz` | **-0.28** [-0.44,-0.07] |
+| 6 perfect CT (E>5) | `cosine_energy_pdf_burstaxis_r3_e3.npz` | **-0.50** [-0.66,-0.37] |
+
+Three files cover all six scenarios; every change is a `PDF_PATH` swap, no code change.
+Scenario 4 is left alone because it measured table-insensitive, not because it is right: its
+correct density would be a P(ES)-weighted mixture, which was never tested — the honest
+statement is "no measured reason to change it".
+
+## 30. What the deployed table should have been, and what it cost historically
+
+`data/cosine_energy_pdf.npz` should have been the density of **cos(reco electron, BURST
+direction)** for the population each scenario fits, not cos(reco electron, true electron).
+Rebuilding it the right way from the r2-era campaign's own per-event outputs
+(`v80_fixed_1000`, ED v58, cats 673-900, 54 114 true-ES events) shows the historical damage
+was small, and why:
+
+| E [MeV] | deployed (v58 resolution) | v58 burst-axis (correct) | v63 resolution | v63 burst-axis |
+|---|---|---|---|---|
+| 4-6 | 0.410 | 0.385 | 0.481 | 0.436 |
+| 6-8 | 0.502 | 0.491 | 0.574 | 0.534 |
+| 8-10 | 0.529 | 0.528 | 0.606 | 0.568 |
+| 10-12 | 0.545 | 0.565 | 0.607 | 0.592 |
+| 16-18 | 0.569 | 0.618 | 0.674 | 0.627 |
+| 24-26 | 0.610 | 0.673 | 0.708 | 0.680 |
+
+For **v58 the two agree to -0.05…+0.03** in ⟨cos⟩, and where they differ the deployed table
+is if anything slightly *under*-confident at high energy. The reason is that v58's angular
+resolution (⟨cos⟩ ≈ 0.5-0.6) is far broader than the ES kinematic kernel
+(⟨cos(true e, nu)⟩ = 0.91 at 2-4 MeV rising to 0.99 above 16 MeV): convolving a broad kernel
+with a narrow one barely changes it. The convention error was therefore numerically almost
+invisible in the r2/b330 era and only became material once the ED improved — for v63 the same
+comparison differs by 0.04-0.14. **That is why nobody caught it, and it is a warning: every
+future ED improvement makes this table convention matter more.**
+
+How much the historical numbers were affected, as far as the kept outputs allow:
+
+* **Scenario 1 is the exception and can be stated exactly.** It is fed true directions, so the
+  fit depends on the table *only* — no ED model enters. Measured on r3 rows, the deployed v58
+  table gives theta68 = 0.75 deg where the kinematic table gives 0.52. So the historical
+  best-case numbers were inflated by **≈0.23 deg**, independently of era or ED model.
+* **Scenarios 2/3/5/6**: the v58-era convention error is 2-4x smaller in ⟨cos⟩ than the
+  v63-era one, and the v63-era correction is worth -0.28…-0.50 deg in the pure-ES scenarios,
+  so the historical pure-ES numbers were plausibly inflated by **≲0.2 deg** — a bias, not a
+  reordering. For the full pipeline no useful bound can be set this way, because the r2-era
+  fit also had no mixture at all, which is a larger and separate error.
+* **What cannot be done without new fits**: `v80_fixed_1000_budget330` keeps only
+  `scenario_cos_theta_report.json` per cat, no per-event tars, so b330 itself cannot be
+  re-fitted. A direct measurement would mean re-fitting the `v80_fixed_1000` per-event
+  outputs under the budget replay with corrected v58 tables (~2 x 1000 fits, a few condor
+  hours). Cheap enough if the exact historical bias is ever wanted; not done here.
+
+## 31. Footprint (this step)
+
+* 3 burst-axis tables + provenance next to the v63 model: **108 kB**.
+* 56 condor jobs (cluster 15969062); `r3_tables/` now holds 241 files, **1.1 MB**.
+* `/eos/project-e/ep-nu` free inodes: **98 963**. Nothing written to the user area.
